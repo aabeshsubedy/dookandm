@@ -4,6 +4,7 @@ import { connectTestDb, clearTestDb, closeTestDb } from './helpers/db.js';
 import { app, registerAndLogin, auth } from './helpers/app.js';
 import { Seller } from '../src/models/Seller.js';
 import { Customer } from '../src/models/Customer.js';
+import { Order } from '../src/models/Order.js';
 
 beforeAll(connectTestDb);
 afterAll(closeTestDb);
@@ -48,6 +49,36 @@ describe('order creation + pipeline', () => {
     const res = await request(app).post('/api/orders').set(auth(accessToken)).send(sampleOrder);
     expect(res.status).toBe(403);
     expect(res.body.error.code).toBe('PLAN_QUOTA_EXCEEDED');
+  });
+
+  it('generates a unique next order number even when existing dates are out of order', async () => {
+    const { accessToken, seller } = await registerAndLogin();
+    const customer = await Customer.create({ seller: seller._id, phones: ['+9779812345678'] });
+    // Highest number has the OLDEST createdAt (as seeded/backfilled data can).
+    await Order.create({
+      seller: seller._id,
+      orderNumber: 'DKN-000002',
+      customer: customer._id,
+      items: [{ productName: 'A', qty: 1, unitPricePaisa: 100 }],
+      subtotalPaisa: 100,
+      totalPaisa: 100,
+      phone: '+9779812345678',
+      createdAt: new Date('2020-01-01'),
+    });
+    await Order.create({
+      seller: seller._id,
+      orderNumber: 'DKN-000001',
+      customer: customer._id,
+      items: [{ productName: 'B', qty: 1, unitPricePaisa: 100 }],
+      subtotalPaisa: 100,
+      totalPaisa: 100,
+      phone: '+9779812345678',
+      createdAt: new Date('2024-01-01'),
+    });
+
+    const res = await request(app).post('/api/orders').set(auth(accessToken)).send(sampleOrder);
+    expect(res.status).toBe(201);
+    expect(res.body.data.order.orderNumber).toBe('DKN-000003');
   });
 
   it('validates status transitions (rejects illegal jumps)', async () => {

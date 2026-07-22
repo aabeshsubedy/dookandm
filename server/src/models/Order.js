@@ -3,6 +3,10 @@ import { PAYMENT_TYPES, ORDER_STATUSES } from '@dokaandm/shared';
 
 const orderItemSchema = new mongoose.Schema(
   {
+    // Optional link to a catalog product; name/price stay snapshotted below so
+    // historical orders are unaffected by later product edits.
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    sku: { type: String },
     productName: { type: String, required: true, maxlength: 200 },
     qty: { type: Number, required: true, min: 1 },
     unitPricePaisa: { type: Number, required: true, min: 0 },

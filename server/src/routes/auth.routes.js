@@ -5,7 +5,7 @@ import { authLimiter } from '../middleware/rateLimit.js';
 import { requireAuth } from '../middleware/auth.js';
 import { asyncHandler, ok } from '../lib/http.js';
 import { ApiError } from '../lib/ApiError.js';
-import { registerSeller, authenticate } from '../services/authService.js';
+import { registerSeller, authenticate, verifySellerPassword } from '../services/authService.js';
 import {
   signAccessToken,
   issueRefreshToken,
@@ -153,6 +153,36 @@ router.get(
       seller: req.seller.toSafeJSON(),
       plan: buildPlanPayload(req.seller, usage),
     });
+  })
+);
+
+/**
+ * @openapi
+ * /auth/verify-password:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Confirm the current user's password before sensitive actions
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [password]
+ *             properties:
+ *               password: { type: string }
+ *     responses:
+ *       200: { description: Password accepted }
+ *       401: { description: Incorrect password }
+ */
+router.post(
+  '/verify-password',
+  requireAuth,
+  authLimiter,
+  asyncHandler(async (req, res) => {
+    await verifySellerPassword(req.seller._id, req.body?.password);
+    return ok(res, { verified: true });
   })
 );
 

@@ -55,6 +55,11 @@ export const RISK_CONFIG = {
 
 export const CUSTOMER_TAG_PRESETS = ['VIP', 'risky', 'regular', 'wholesale'];
 
+export const PRODUCT_STATUSES = ['active', 'archived'];
+
+/** Low-stock threshold (units) for the "running low" indicator on tracked products. */
+export const LOW_STOCK_THRESHOLD = 5;
+
 export const ACTIVITY_ACTIONS = {
   ORDER_CREATED: 'order.created',
   ORDER_STATUS_CHANGED: 'order.status_changed',
@@ -67,6 +72,9 @@ export const ACTIVITY_ACTIONS = {
   CHANNEL_DISCONNECTED: 'channel.disconnected',
   REMINDER_CREATED: 'reminder.created',
   REMINDER_COMPLETED: 'reminder.completed',
+  PRODUCT_CREATED: 'product.created',
+  PRODUCT_UPDATED: 'product.updated',
+  PRODUCT_ARCHIVED: 'product.archived',
 };
 
 export const PAGINATION = {

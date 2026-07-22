@@ -24,6 +24,7 @@ export const PLAN_LIMITS = {
     singleChannelType: true,
     ordersPerMonth: 40,
     customers: 25,
+    products: 25,
     teamLogins: 1,
     features: new Set([]),
     support: 'Community, 48–72h',
@@ -36,6 +37,7 @@ export const PLAN_LIMITS = {
     singleChannelType: false,
     ordersPerMonth: 300,
     customers: 500,
+    products: 300,
     teamLogins: 1,
     features: new Set([
       FEATURES.COD_RISK,
@@ -54,6 +56,7 @@ export const PLAN_LIMITS = {
     singleChannelType: false,
     ordersPerMonth: 1500,
     customers: Infinity,
+    products: 2000,
     teamLogins: 3,
     features: new Set([
       FEATURES.COD_RISK,
@@ -71,6 +74,7 @@ export const PLAN_LIMITS = {
     singleChannelType: false,
     ordersPerMonth: Infinity,
     customers: Infinity,
+    products: Infinity,
     teamLogins: Infinity,
     features: new Set([
       FEATURES.COD_RISK,

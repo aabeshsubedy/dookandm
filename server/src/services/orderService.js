@@ -8,6 +8,7 @@ import {
 import { Order } from '../models/Order.js';
 import { Conversation } from '../models/Conversation.js';
 import { Seller } from '../models/Seller.js';
+import { Product } from '../models/Product.js';
 import { ApiError } from '../lib/ApiError.js';
 import { resolveByPhone } from './identityService.js';
 import { refreshCustomerRisk } from './riskService.js';
@@ -16,10 +17,15 @@ import { publish } from './realtime.js';
 
 const toPaisa = (npr) => Math.round(Number(npr) * 100);
 
-/** Generate the next per-seller sequential order number, e.g. DKN-000042. */
+/**
+ * Generate the next per-seller sequential order number, e.g. DKN-000042.
+ * Sorts by orderNumber (zero-padded → lexicographic == numeric) rather than by
+ * createdAt, so out-of-order timestamps (e.g. seeded data) can't reissue a number.
+ */
 async function nextOrderNumber(sellerId) {
-  const last = await Order.findOne({ seller: sellerId })
-    .sort({ createdAt: -1 })
+  const prefix = `${BRAND.orderPrefix}-`;
+  const last = await Order.findOne({ seller: sellerId, orderNumber: new RegExp(`^${prefix}\\d+$`) })
+    .sort({ orderNumber: -1 })
     .select('orderNumber')
     .lean();
   let n = 0;
@@ -27,7 +33,7 @@ async function nextOrderNumber(sellerId) {
     const m = last.orderNumber.match(/(\d+)$/);
     if (m) n = parseInt(m[1], 10);
   }
-  return `${BRAND.orderPrefix}-${String(n + 1).padStart(6, '0')}`;
+  return `${prefix}${String(n + 1).padStart(6, '0')}`;
 }
 
 /**
@@ -75,11 +81,26 @@ export async function createOrder({ seller, tenantId, input, ip }) {
     channelIdentity,
   });
 
-  const items = input.items.map((it) => ({
-    productName: it.productName,
-    qty: it.qty,
-    unitPricePaisa: toPaisa(it.unitPriceNpr),
-  }));
+  // Resolve any linked catalog products (tenant-scoped) to snapshot SKU + validate.
+  const productIds = input.items
+    .map((it) => it.productId)
+    .filter((id) => id && mongoose.isValidObjectId(id));
+  const productMap = new Map();
+  if (productIds.length) {
+    const products = await Product.find({ seller: tenantId, _id: { $in: productIds } });
+    for (const p of products) productMap.set(String(p._id), p);
+  }
+
+  const items = input.items.map((it) => {
+    const linked = it.productId ? productMap.get(String(it.productId)) : null;
+    return {
+      product: linked?._id,
+      sku: linked?.sku,
+      productName: it.productName,
+      qty: it.qty,
+      unitPricePaisa: toPaisa(it.unitPriceNpr),
+    };
+  });
   const subtotalPaisa = items.reduce((sum, it) => sum + it.unitPricePaisa * it.qty, 0);
   const shippingPaisa = toPaisa(input.shippingNpr || 0);
   const totalPaisa = subtotalPaisa + shippingPaisa;
@@ -107,6 +128,22 @@ export async function createOrder({ seller, tenantId, input, ip }) {
 
   // Increment the monthly quota counter atomically.
   await Seller.updateOne({ _id: tenantId }, { $inc: { orderCountThisPeriod: 1 } });
+
+  // Roll up sales onto linked products; decrement stock for tracked inventory.
+  for (const it of items) {
+    if (!it.product) continue;
+    const inc = { 'stats.unitsSold': it.qty, 'stats.revenuePaisa': it.unitPricePaisa * it.qty };
+    const linked = productMap.get(String(it.product));
+    if (linked?.trackInventory) {
+      const nextStock = Math.max(0, (linked.stock || 0) - it.qty);
+      await Product.updateOne(
+        { _id: it.product, seller: tenantId },
+        { $inc: inc, $set: { stock: nextStock } }
+      );
+    } else {
+      await Product.updateOne({ _id: it.product, seller: tenantId }, { $inc: inc });
+    }
+  }
 
   if (conversation && !conversation.hasOrder) {
     conversation.hasOrder = true;

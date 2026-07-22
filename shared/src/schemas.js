@@ -4,6 +4,7 @@ import {
   PAYMENT_TYPES,
   ORDER_STATUSES,
   CONVERSATION_KINDS,
+  PRODUCT_STATUSES,
 } from './constants.js';
 
 /* ----------------------------- Auth ----------------------------- */
@@ -48,6 +49,8 @@ export const noteSchema = z.object({
 /* ---------------------------- Orders ---------------------------- */
 
 export const orderItemSchema = z.object({
+  // Optional link to a catalog product; name/price are still snapshotted on the order.
+  productId: z.string().trim().optional(),
   productName: z.string().trim().min(1, 'Product name is required').max(200),
   qty: z.coerce.number().int().min(1).max(100000),
   unitPriceNpr: z.coerce.number().min(0).max(100000000),
@@ -96,6 +99,51 @@ export const updateReminderSchema = z
     status: z.enum(['open', 'done']).optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: 'Nothing to update' });
+
+/* --------------------------- Products --------------------------- */
+
+export const createProductSchema = z.object({
+  name: z.string().trim().min(1, 'Product name is required').max(200),
+  sku: z
+    .string()
+    .trim()
+    .max(60)
+    .regex(/^[A-Za-z0-9._-]*$/, 'SKU can only contain letters, numbers, . _ -')
+    .optional()
+    .or(z.literal('')),
+  priceNpr: z.coerce.number().min(0, 'Price must be 0 or more').max(100000000),
+  costNpr: z.coerce.number().min(0).max(100000000).optional(),
+  category: z.string().trim().max(80).optional(),
+  description: z.string().trim().max(2000).optional(),
+  imageUrl: z.string().trim().url('Enter a valid URL').max(500).optional().or(z.literal('')),
+  trackInventory: z.coerce.boolean().optional(),
+  stock: z.coerce.number().int().min(0).max(1000000).optional(),
+});
+
+export const updateProductSchema = z
+  .object({
+    name: z.string().trim().min(1).max(200).optional(),
+    sku: z
+      .string()
+      .trim()
+      .max(60)
+      .regex(/^[A-Za-z0-9._-]*$/, 'SKU can only contain letters, numbers, . _ -')
+      .optional(),
+    priceNpr: z.coerce.number().min(0).max(100000000).optional(),
+    costNpr: z.coerce.number().min(0).max(100000000).optional(),
+    category: z.string().trim().max(80).optional().or(z.literal('')),
+    description: z.string().trim().max(2000).optional().or(z.literal('')),
+    imageUrl: z.string().trim().url('Enter a valid URL').max(500).optional().or(z.literal('')),
+    trackInventory: z.coerce.boolean().optional(),
+    stock: z.coerce.number().int().min(0).max(1000000).optional(),
+    status: z.enum(PRODUCT_STATUSES).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: 'Nothing to update' });
+
+/** Adjust stock by a signed delta (e.g. restock +10, correction -3). */
+export const adjustStockSchema = z.object({
+  delta: z.coerce.number().int().refine((v) => v !== 0, 'Enter a non-zero amount'),
+});
 
 /* --------------------------- Messaging -------------------------- */
 

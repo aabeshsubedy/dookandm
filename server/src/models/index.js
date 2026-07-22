@@ -6,5 +6,6 @@ export { Conversation } from './Conversation.js';
 export { Message } from './Message.js';
 export { Order } from './Order.js';
 export { Reminder } from './Reminder.js';
+export { Product } from './Product.js';
 export { ActivityLog } from './ActivityLog.js';
 export { WebhookEvent } from './WebhookEvent.js';

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Facebook, Instagram, Plug, CheckCircle2, AlertTriangle, RefreshCw, Trash2 } from 'lucide-react';
 import { Page, PageHeader } from '../components/layout/PageHeader.jsx';
@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import { EmptyState } from '../components/ui/EmptyState.jsx';
 import { LoadingPanel } from '../components/ui/Skeleton.jsx';
+import { PasswordConfirmModal } from '../components/ui/PasswordConfirmModal.jsx';
 import { useChannels } from '../hooks/data.js';
 import { api, apiError } from '../lib/api.js';
 import { useAuthStore } from '../store/authStore.js';
@@ -28,6 +29,9 @@ export default function ChannelsPage() {
   const qc = useQueryClient();
   const [params, setParams] = useSearchParams();
 
+  /** @type {[{ type: 'connect' } | { type: 'disconnect', id: string, name?: string } | null, Function]} */
+  const [pending, setPending] = useState(null);
+
   useEffect(() => {
     const meta = params.get('meta');
     if (meta && metaMessages[meta]) {
@@ -44,7 +48,7 @@ export default function ChannelsPage() {
   const metaConfigured = data?.metaConfigured;
   const channelLimit = plan?.limits?.channels;
 
-  const connect = async () => {
+  const runConnect = async () => {
     try {
       const res = await api.get('/channels/oauth/url');
       window.location.href = res.data.data.url;
@@ -52,16 +56,18 @@ export default function ChannelsPage() {
       const e = apiError(err);
       if (e.code === 'PLAN_QUOTA_EXCEEDED') toast.error(e.message, 'Channel limit reached');
       else toast.error(e.message, 'Cannot connect');
+      throw err;
     }
   };
 
-  const disconnect = async (id) => {
+  const runDisconnect = async (id) => {
     try {
       await api.delete(`/channels/${id}`);
       toast.success('Channel disconnected');
       qc.invalidateQueries({ queryKey: ['channels'] });
     } catch (err) {
       toast.error(apiError(err).message);
+      throw err;
     }
   };
 
@@ -74,13 +80,41 @@ export default function ChannelsPage() {
     }
   };
 
+  const confirmPending = async () => {
+    if (!pending) return;
+    if (pending.type === 'connect') {
+      await runConnect();
+      return;
+    }
+    if (pending.type === 'disconnect') {
+      await runDisconnect(pending.id);
+    }
+  };
+
+  const passwordModal = (
+    <PasswordConfirmModal
+      open={!!pending}
+      onClose={() => setPending(null)}
+      onConfirm={confirmPending}
+      title={
+        pending?.type === 'disconnect' ? 'Disconnect account' : 'Connect Meta account'
+      }
+      description={
+        pending?.type === 'disconnect'
+          ? `Enter your password to disconnect${pending.name ? ` “${pending.name}”` : ''}.`
+          : 'Enter your password to continue connecting a Facebook or Instagram account.'
+      }
+      confirmLabel={pending?.type === 'disconnect' ? 'Disconnect' : 'Continue'}
+    />
+  );
+
   return (
     <Page>
       <PageHeader
         title="Accounts"
         description="Connect Meta accounts — Facebook Pages and Instagram business profiles."
         action={
-          <Button variant="primary" onClick={connect}>
+          <Button variant="primary" onClick={() => setPending({ type: 'connect' })}>
             <Plug className="h-4 w-4" /> Connect channel
           </Button>
         }
@@ -117,7 +151,7 @@ export default function ChannelsPage() {
               title="No channels connected"
               description="Connect Facebook or Instagram to receive DMs in your unified inbox."
               action={
-                <Button variant="primary" onClick={connect}>
+                <Button variant="primary" onClick={() => setPending({ type: 'connect' })}>
                   <Plug className="h-4 w-4" /> Connect channel
                 </Button>
               }
@@ -165,7 +199,9 @@ export default function ChannelsPage() {
                       variant="ghost"
                       size="icon"
                       className="text-fg-muted hover:text-danger"
-                      onClick={() => disconnect(c._id)}
+                      onClick={() =>
+                        setPending({ type: 'disconnect', id: c._id, name: c.name })
+                      }
                       aria-label="Disconnect"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -177,6 +213,8 @@ export default function ChannelsPage() {
           </div>
         )}
       </div>
+
+      {passwordModal}
     </Page>
   );
 }

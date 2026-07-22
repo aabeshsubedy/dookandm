@@ -77,7 +77,10 @@ export function OrderDetailDrawer({ orderId, open, onClose }) {
               <tbody className="divide-y divide-border">
                 {order.items.map((it, i) => (
                   <tr key={i}>
-                    <td className="px-3 py-2 text-fg">{it.productName}</td>
+                    <td className="px-3 py-2 text-fg">
+                      {it.productName}
+                      {it.sku && <span className="ml-1.5 font-mono text-xs text-fg-muted">{it.sku}</span>}
+                    </td>
                     <td className="px-3 py-2 text-center text-fg-muted">×{it.qty}</td>
                     <td className="px-3 py-2 text-right text-fg">
                       {nprLabel(it.unitPricePaisa * it.qty)}

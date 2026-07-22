@@ -35,3 +35,17 @@ export async function authenticate({ email, password }) {
   await seller.save();
   return seller;
 }
+
+/** Re-check the signed-in seller's password before sensitive account changes. */
+export async function verifySellerPassword(sellerId, password) {
+  if (!password || typeof password !== 'string') {
+    throw ApiError.badRequest('Password is required');
+  }
+  const seller = await Seller.findById(sellerId).select('+passwordHash');
+  const hash = seller?.passwordHash || '$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinva';
+  const okPassword = await bcrypt.compare(password, hash);
+  if (!seller || !okPassword || !seller.isActive) {
+    throw ApiError.unauthorized('Incorrect password', 'INVALID_PASSWORD');
+  }
+  return true;
+}

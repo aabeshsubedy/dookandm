@@ -105,11 +105,16 @@ export default function PlanPage() {
             </Badge>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <UsageMeter
               label="Orders this month"
               used={plan?.usage?.ordersThisPeriod || 0}
               limit={plan?.limits?.ordersPerMonth}
+            />
+            <UsageMeter
+              label="Products"
+              used={plan?.usage?.products || 0}
+              limit={plan?.limits?.products}
             />
             <UsageMeter
               label="Customers"
@@ -171,6 +176,7 @@ export default function PlanPage() {
                   {t.ordersPerMonth == null ? 'Unlimited' : t.ordersPerMonth} orders / mo
                 </Li>
                 <Li>{t.customers == null ? 'Unlimited' : t.customers} customers</Li>
+                <Li>{t.products == null ? 'Unlimited' : t.products} products</Li>
                 <Li>
                   {t.teamLogins == null ? 'Unlimited' : t.teamLogins} team login
                   {t.teamLogins === 1 ? '' : 's'}

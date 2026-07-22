@@ -1,6 +1,7 @@
 import { getPlanLimits, minPlanForFeature } from '@dokaandm/shared';
 import { Channel } from '../models/Channel.js';
 import { Customer } from '../models/Customer.js';
+import { Product } from '../models/Product.js';
 import { Seller } from '../models/Seller.js';
 
 /** Reset the monthly order counter if the rolling period has rolled over. */
@@ -19,9 +20,10 @@ export async function rollOrderPeriodIfNeeded(seller) {
 
 /** Live usage snapshot for a tenant (for GET /plan meters + upgrade nudges). */
 export async function getUsage(seller, tenantId) {
-  const [channels, customers] = await Promise.all([
+  const [channels, customers, products] = await Promise.all([
     Channel.countDocuments({ seller: tenantId, status: { $ne: 'disconnected' } }),
     Customer.countDocuments({ seller: tenantId }),
+    Product.countDocuments({ seller: tenantId, status: 'active' }),
   ]);
   const teamLogins = await Seller.countDocuments({
     $or: [{ _id: tenantId }, { parentSeller: tenantId }],
@@ -30,6 +32,7 @@ export async function getUsage(seller, tenantId) {
   return {
     channels,
     customers,
+    products,
     ordersThisPeriod: seller.orderCountThisPeriod || 0,
     teamLogins,
   };
@@ -46,6 +49,7 @@ export function buildPlanPayload(seller, usage) {
       channels: serialize(limits.channels),
       ordersPerMonth: serialize(limits.ordersPerMonth),
       customers: serialize(limits.customers),
+      products: serialize(limits.products),
       teamLogins: serialize(limits.teamLogins),
       singleChannelType: limits.singleChannelType,
     },

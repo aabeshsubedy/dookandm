@@ -182,6 +182,18 @@
   animation: float-soft 6s ease-in-out infinite;
 }
 
+/* Landing page — subtle product mock lift */
+.landing-float {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-float,
+  .animate-float-soft {
+    animation: none;
+  }
+}
+
 /*
   Orders kanban board
   - Wider content (~13"+ with sidebar): 5 equal columns fill available width

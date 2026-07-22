@@ -3,6 +3,7 @@ import { ApiError } from '../lib/ApiError.js';
 import { asyncHandler } from '../lib/http.js';
 import { Channel } from '../models/Channel.js';
 import { Customer } from '../models/Customer.js';
+import { Product } from '../models/Product.js';
 import { rollOrderPeriodIfNeeded } from '../services/planService.js';
 
 /** Gate a route behind a plan feature flag. */
@@ -45,6 +46,21 @@ export const enforceCustomerQuota = asyncHandler(async (req, _res, next) => {
       `You have reached your customer profile limit (${limit}). Upgrade to add more.`,
       'PLAN_QUOTA_EXCEEDED',
       { resource: 'customers', limit, used: count }
+    );
+  }
+  next();
+});
+
+/** Enforce the product-catalog cap. */
+export const enforceProductQuota = asyncHandler(async (req, _res, next) => {
+  const limit = getPlanLimits(req.seller.plan).products;
+  if (limit === Infinity) return next();
+  const count = await Product.countDocuments({ seller: req.tenantId, status: 'active' });
+  if (count >= limit) {
+    throw ApiError.forbidden(
+      `You have reached your product limit (${limit}). Upgrade to add more.`,
+      'PLAN_QUOTA_EXCEEDED',
+      { resource: 'products', limit, used: count }
     );
   }
   next();

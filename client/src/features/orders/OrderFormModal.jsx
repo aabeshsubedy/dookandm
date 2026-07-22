@@ -4,10 +4,13 @@ import { PAYMENT_TYPES, PAYMENT_TYPE_LABELS } from '@dokaandm/shared';
 import { Modal } from '../../components/ui/Modal.jsx';
 import { Button } from '../../components/ui/Button.jsx';
 import { Input, Textarea, Select, Field } from '../../components/ui/Input.jsx';
+import { ProductPicker } from '../products/ProductPicker.jsx';
 import { useCreateOrder } from '../../hooks/data.js';
 import { apiError } from '../../lib/api.js';
 import { toast } from '../../store/toastStore.js';
 import { formatNpr } from '../../lib/format.js';
+
+const emptyItem = { productId: '', productName: '', qty: 1, unitPriceNpr: '' };
 
 export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
   const createOrder = useCreateOrder();
@@ -18,6 +21,7 @@ export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -28,7 +32,7 @@ export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
       paymentReference: '',
       shippingNpr: 0,
       notes: '',
-      items: [{ productName: '', qty: 1, unitPriceNpr: '' }],
+      items: [{ ...emptyItem }],
     },
   });
 
@@ -46,6 +50,7 @@ export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
       ...values,
       conversationId: prefill.conversationId,
       items: values.items.map((it) => ({
+        productId: it.productId || undefined,
         productName: it.productName,
         qty: Number(it.qty),
         unitPriceNpr: Number(it.unitPriceNpr),
@@ -90,12 +95,7 @@ export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <span className="label-base mb-0">Items</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => append({ productName: '', qty: 1, unitPriceNpr: '' })}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={() => append({ ...emptyItem })}>
               <Plus className="h-4 w-4" /> Add item
             </Button>
           </div>
@@ -103,10 +103,22 @@ export function OrderFormModal({ open, onClose, prefill = {}, onCreated }) {
             {fields.map((field, i) => (
               <div key={field.id} className="flex items-start gap-2">
                 <div className="flex-1">
-                  <Input
-                    placeholder="Product name"
+                  {/* hidden productId + productName registered; picker drives them */}
+                  <input type="hidden" {...register(`items.${i}.productId`)} />
+                  <input type="hidden" {...register(`items.${i}.productName`, { required: true })} />
+                  <ProductPicker
+                    value={watch(`items.${i}.productName`)}
+                    linked={!!watch(`items.${i}.productId`)}
                     invalid={!!errors.items?.[i]?.productName}
-                    {...register(`items.${i}.productName`, { required: true })}
+                    onType={(name) => {
+                      setValue(`items.${i}.productName`, name, { shouldValidate: true });
+                      setValue(`items.${i}.productId`, '');
+                    }}
+                    onPick={(p) => {
+                      setValue(`items.${i}.productId`, p._id);
+                      setValue(`items.${i}.productName`, p.name, { shouldValidate: true });
+                      setValue(`items.${i}.unitPriceNpr`, p.pricePaisa / 100, { shouldValidate: true });
+                    }}
                   />
                 </div>
                 <Input

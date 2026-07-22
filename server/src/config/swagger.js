@@ -40,6 +40,7 @@ const spec = swaggerJsdoc({
       { name: 'Inbox' },
       { name: 'Customers' },
       { name: 'Orders' },
+      { name: 'Products' },
       { name: 'Reminders' },
       { name: 'Dashboard' },
       { name: 'Plan' },

@@ -5,6 +5,8 @@
 > This document is the single source of truth for the MVP build. It is derived from `MVP_Development_Plan` and `pricing plan.md`. It defines the feature-level functional requirements, the complete MongoDB data model, the full API surface (which doubles as the Swagger source of truth), the core app flows, and how pricing-tier limits are enforced at the data/API layer.
 >
 > **Scope discipline:** This spec covers **only** the v1 MVP. WhatsApp, TikTok, AI auto-reply, payment-gateway integration (eSewa/Khalti), and storefront/website features are explicitly **out of scope** and are not modelled here except where a forward-compatible field costs nothing to reserve.
+>
+> **Revision — Product Catalog added (post-v1 amendment):** A lightweight **Product Catalog** was added on top of the original MVP so sellers can maintain reusable products (searchable by name **and** product ID/SKU), attach them to orders without retyping, and track inventory. This is not a storefront (still out of scope) — it is an internal catalog + inventory aid for the order-capture workflow. All product changes are marked **[Products]** throughout: see Feature 6 (§1.6), the `products` collection (§2.11), the order-item product link (§2.7), the Products API (§3.5b), and the product limits added to every plan (§5).
 
 ---
 
@@ -68,6 +70,7 @@ Turn any conversation into a structured order in a few taps, then track it throu
 
 **FR-O1** From a conversation, "Create Order" opens a form pre-filled where possible (customer name/handle, channel, linked conversation).
 **FR-O2** Order fields: line items (product name, qty, unit price), customer phone (required — the identity key), delivery address, payment type (`cod | esewa | khalti | bank_transfer`), payment reference (optional), notes. Totals auto-compute.
+**FR-O2b [Products]** Each line item may be a **catalog product** picked via a searchable combobox (searches name + SKU) that autofills the name and unit price and links the item to the product; or a free-typed one-off name. The product's **name and price are snapshotted** onto the order so later product edits never alter historical orders. On order creation, linked products get their `stats.unitsSold`/`stats.revenuePaisa` incremented and, if inventory tracking is on, their `stock` decremented (floored at 0).
 **FR-O3** Status pipeline: `pending → confirmed → shipped → delivered → returned` (plus `cancelled`). Transitions are validated (no illegal jumps) and each change is audit-logged.
 **FR-O4** Orders link relationally to a `Customer` (via phone identity resolution) and to the source `Conversation`, so order history rolls up per customer automatically.
 **FR-O5** **No payment processing.** Payment type/reference are stored fields only, for the seller's own reconciliation.
@@ -137,6 +140,26 @@ An orientation home screen (not an analytics suite) reading aggregates over exis
 
 **Flow — Morning orientation**
 1. Seller logs in → dashboard loads → sees "5 orders today (NPR 12,400), 3 COD pending confirmation, 2 follow-ups due" → clicks a follow-up → jumps to that customer.
+
+---
+
+### 1.6 Feature 6 — Product Catalog · **[Products] — added post-v1**
+
+A lightweight, searchable product catalog with optional inventory tracking. It is **not** a storefront (no public pages, no cart, no checkout — those stay out of scope); it is an internal catalog that speeds up order capture and gives basic stock/sales visibility.
+
+**FR-P1** A seller can create products with: name (required), **product ID / SKU** (unique per seller; auto-generated `DKN-P-000001…` if left blank), price, optional cost (for margin), category, description, and image URL.
+**FR-P2 (search)** Products are searchable by **name and by product ID (SKU)** in one query, plus filterable by category, status (active/archived), and a **low-stock** filter.
+**FR-P3 (inventory, opt-in per product)** A product may enable inventory tracking with a stock count. Tracked products show **in-stock / low-stock / out-of-stock** states (low threshold = `LOW_STOCK_THRESHOLD`, default 5). Untracked products are treated as unlimited. Stock can be adjusted by a signed delta (restock/correction), floored at 0.
+**FR-P4 (order integration)** From order capture, a line item can be attached to a product via a searchable picker that autofills name + price. Name/price are **snapshotted** onto the order; product edits never rewrite history. On order creation: `stats.unitsSold` and `stats.revenuePaisa` increment, and tracked `stock` decrements (see FR-O2b).
+**FR-P5 (soft delete)** Deleting a product **archives** it (status → `archived`) rather than removing it, so order history and SKUs stay intact. Archived products are hidden from the default list and the order picker but remain queryable.
+**FR-P6 (quota)** Product creation counts against a per-plan product limit (Free 25 · Starter 300 · Growth 2,000 · Business unlimited — see §5); exceeding it is blocked with an upgrade prompt. Archiving frees a slot (limit counts **active** products).
+**FR-P7 (export)** The catalog is exportable to CSV (paid feature, mirrors orders export).
+**FR-P8 (isolation + audit)** Every product is seller-scoped; create/update/archive and stock changes are audit-logged.
+
+**Flow — Add a product, then sell it**
+1. Seller opens Products → "Add product" → enters name + price (SKU auto-assigned) → optionally toggles inventory tracking and sets stock.
+2. Later, capturing an order, the seller searches the picker by name or SKU → selects the product → qty/price prefilled → creates the order.
+3. The product's units-sold rises and, if tracked, stock drops; a low-stock badge appears once it crosses the threshold.
 
 ---
 
@@ -262,7 +285,7 @@ Indexes: `{ conversation:1, createdAt:1 }` (thread render); `{ externalMessageId
 | `customer` | ObjectId ref Customer | ✔ | | |
 | `conversation` | ObjectId ref Conversation | ✖ | | source thread |
 | `channelType` | String | ✖ | | origin channel |
-| `items` | [{ productName, qty, unitPricePaisa }] | ✔ | | ≥1 |
+| `items` | [{ product?, sku?, productName, qty, unitPricePaisa }] | ✔ | | ≥1. **[Products]** `product` (ObjectId ref Product) + `sku` are optional snapshots when a line item is linked to a catalog product; `productName`/`unitPricePaisa` remain denormalized so edits/archival of the product never mutate historical orders. |
 | `subtotalPaisa` | Number | ✔ | | computed |
 | `shippingPaisa` | Number | ✔ | 0 | |
 | `totalPaisa` | Number | ✔ | | |
@@ -312,8 +335,26 @@ Indexes: `{ seller:1, createdAt:-1 }`; `{ entityType:1, entityId:1 }`.
 
 Indexes: `{ dedupeKey:1 }` unique; `{ expiresAt:1 }` TTL.
 
+### 2.11 `products` **[Products]**
+| Field | Type | Req | Default | Notes |
+|---|---|---|---|---|
+| `seller` | ObjectId | ✔ | | tenant |
+| `name` | String | ✔ | | trimmed, ≤200 |
+| `sku` | String | ✔ | | product ID; **unique per seller**; auto `DKN-P-000001…` if omitted |
+| `pricePaisa` | Number | ✔ | | integer paisa |
+| `costPaisa` | Number | ✖ | | optional, for margin insight |
+| `category` | String | ✖ | | ≤80 |
+| `description` | String | ✖ | | ≤2000 |
+| `imageUrl` | String | ✖ | | ≤500 |
+| `trackInventory` | Boolean | ✔ | false | opt-in per product |
+| `stock` | Number | ✔ | 0 | only meaningful when `trackInventory` |
+| `status` | String (enum `active|archived`) | ✔ | `active` | archive = soft delete |
+| `stats` | { unitsSold, revenuePaisa } | ✔ | `{0,0}` | denormalized, incremented at order capture |
+
+Indexes: `{ seller:1, sku:1 }` **unique** (the "search by product ID" key + dedupe); `{ seller:1, status:1, createdAt:-1 }` (list); `{ seller:1, name:"text" }` (name search); `{ seller:1, category:1 }` (filter).
+
 **Relationships summary:**
-`Seller (tenant) 1─N Channel`, `Channel 1─N Conversation 1─N Message`, `Customer 1─N Order`, `Conversation 0..1─N Order`, `Customer 1─N Reminder`, `Conversation N─1 Customer` (via identity resolution). Everything hangs off `seller` for isolation.
+`Seller (tenant) 1─N Channel`, `Channel 1─N Conversation 1─N Message`, `Customer 1─N Order`, `Conversation 0..1─N Order`, `Customer 1─N Reminder`, `Conversation N─1 Customer` (via identity resolution), **`Seller 1─N Product`, `Product 0..1─N OrderItem`** (an order line item optionally links one product; the link is a soft, snapshotting reference). Everything hangs off `seller` for isolation.
 
 ---
 
@@ -372,6 +413,20 @@ Base path `/api`. All responses envelope: `{ "data": … }` on success, `{ "erro
 | PATCH | `/orders/:id/status` | 🔒 | transition (validated + audit-logged) |
 | GET | `/orders/board` | 🔒 | pipeline counts + per-stage page (paid: kanban) |
 | GET | `/orders/export.csv` | 🔒 | CSV export (paid) |
+
+### 3.5b Products **[Products]**
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| GET | `/products` | 🔒 | list/search — `q` matches **name OR SKU**; filters `category,status(active\|archived\|all),lowStock`; paginated |
+| GET | `/products/categories` | 🔒 | distinct category list (for filters) |
+| GET | `/products/export.csv` | 🔒 | CSV export (paid) |
+| POST | `/products` | 🔒 | create (quota-checked; SKU auto-generated if omitted; `409 SKU_TAKEN` on dup) |
+| GET | `/products/:id` | 🔒 | detail |
+| PATCH | `/products/:id` | 🔒 | edit fields (audit-logged; `409` on SKU clash) |
+| POST | `/products/:id/stock` | 🔒 | adjust stock by signed `{delta}` (floored at 0; requires `trackInventory`) |
+| DELETE | `/products/:id` | 🔒 | archive (soft delete) |
+
+> Order creation (`POST /orders`) accepts an optional `productId` on each item; the server snapshots the product's SKU, decrements tracked stock, and rolls up `unitsSold`/`revenuePaisa`.
 
 ### 3.6 Reminders
 | Method | Path | Auth | Purpose |
@@ -472,6 +527,7 @@ Payment collection is **out of scope**. Each seller has a `plan` field; enforcem
 | Channels | 1 (FB **or** IG) | FB + IG (2) | up to 3 | unlimited |
 | Orders / month | 40 | 300 | 1,500 | unlimited |
 | Customer profiles | 25 | 500 | unlimited | unlimited |
+| **Products [Products]** | **25** | **300** | **2,000** | **unlimited** |
 | Order pipeline | basic (list only) | full (kanban+filters) | full | full |
 | CRM notes/tags/reminders | ✖ | ✔ | ✔ | ✔ |
 | COD risk flagging | ✖ | ✔ | ✔ | ✔ |
@@ -479,16 +535,17 @@ Payment collection is **out of scope**. Each seller has a `plan` field; enforcem
 | CSV export | ✖ | ✔ | ✔ | ✔ |
 | Team logins | 1 | 1 | up to 3 | unlimited |
 
-Encoded as `PLAN_LIMITS[plan] = { channels, ordersPerMonth, customers, teamLogins, features: Set }` with `Infinity` for unlimited.
+Encoded as `PLAN_LIMITS[plan] = { channels, ordersPerMonth, customers, products, teamLogins, features: Set }` with `Infinity` for unlimited.
 
 ### 5.2 Enforcement points
-- **`requireFeature(feature)` middleware** — gates COD risk, dashboard, CRM writes, CSV export, kanban board. Returns `403 { code: 'PLAN_FEATURE_LOCKED', requiredPlan }`.
+- **`requireFeature(feature)` middleware** — gates COD risk, dashboard, CRM writes, CSV export (orders **and products**), kanban board. Returns `403 { code: 'PLAN_FEATURE_LOCKED', requiredPlan }`.
 - **`enforceQuota(resource)` middleware** on create endpoints:
   - *Orders*: check `seller.orderCountThisPeriod` against `ordersPerMonth`; roll the counter monthly (`orderCountPeriodStart`). On create, atomically `$inc`. Over-limit → `403 PLAN_QUOTA_EXCEEDED`.
   - *Customers*: `countDocuments({seller})` vs `customers` limit (skip if `Infinity`). (Provisional webhook-created customers count once they gain a phone; a soft grace avoids blocking inbound conversations — inbound is never dropped, but manual create is blocked at the cap.)
+  - ***Products [Products]***: `enforceProductQuota` counts **active** products (`countDocuments({seller, status:'active'})`) vs the `products` limit (skip if `Infinity`). Over-limit → `403 PLAN_QUOTA_EXCEEDED`; archiving frees a slot.
   - *Channels*: on OAuth callback / channel create, count active channels vs limit; Free additionally restricts to exactly one **type**. Over-limit → block connect with upgrade prompt.
   - *Team logins*: staff invite counts vs `teamLogins`.
-- **Live usage surface**: `GET /plan` returns `{ plan, limits, usage: { channels, ordersThisPeriod, customers, teamLogins } }` so the UI shows meters and upgrade nudges.
+- **Live usage surface**: `GET /plan` returns `{ plan, limits, usage: { channels, ordersThisPeriod, customers, products, teamLogins } }` so the UI shows meters and upgrade nudges.
 - **Fail-safe defaults**: unknown/missing plan → treated as Free. Downgrades never delete data; they only block new creates beyond the new cap.
 
 ### 5.3 UI treatment
@@ -501,7 +558,7 @@ Locked features render an upgrade state (not a broken screen); quota-approaching
 - **Security:** Helmet, explicit CORS allowlist, bcrypt≥12, JWT access + rotating httpOnly refresh with reuse detection, rate limiting (auth + webhook), AES-256-GCM encryption of Meta tokens at rest, `X-Hub-Signature-256` webhook verification, Mongoose sanitization + Zod/Joi validation on every endpoint, centralized error handler (no stack traces in prod), audit logging of sensitive actions, per-tenant isolation with tests proving cross-tenant access fails.
 - **Reliability/ops:** pino structured logging with request IDs, `/api/health`, pagination everywhere, webhook idempotency + dedupe, Meta rate-limit queue with backoff, indexes reviewed per query pattern.
 - **Frontend:** React + Vite, React Router, TanStack Query (server state), Zustand (client/UI state — chosen over RTK for lighter footprint on a solo build), Tailwind ocean-blue design system, global error boundary, skeleton loaders, toasts, optimistic updates for reply-send and order-status, empty/loading/error states per screen, keyboard-first inbox, mobile-responsive, accessible (contrast, semantic HTML, focus states).
-- **Testing:** unit tests for **COD risk scoring** and **customer identity resolution** (core differentiators); integration tests for auth flow, order creation, and **cross-tenant isolation**.
+- **Testing:** unit tests for **COD risk scoring** and **customer identity resolution** (core differentiators); integration tests for auth flow, order creation, search-filter safety, order-number-generation robustness, and **cross-tenant isolation**; **[Products]** integration tests for product CRUD, name+SKU search, the product quota, and the order↔product stock/units-sold rollup.
 - **Tooling:** ESLint + Prettier across `/client` and `/server`; `.env.example`; seed script; README + DEPLOYMENT docs.
 
 ### Backend framework decision

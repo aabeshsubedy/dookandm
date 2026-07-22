@@ -129,6 +129,75 @@ export function useChangeOrderStatus() {
   });
 }
 
+/* ─────────────── Products ─────────────── */
+export function useProducts(filters = {}) {
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([k, v]) => {
+    if (v !== undefined && v !== '' && v !== false) params.set(k, v);
+  });
+  return useQuery({
+    queryKey: ['products', filters],
+    queryFn: () => api.get(`/products?${params}`).then((r) => r.data),
+  });
+}
+
+export function useProduct(id) {
+  return useQuery({
+    queryKey: ['product', id],
+    queryFn: () => api.get(`/products/${id}`).then(unwrap),
+    enabled: !!id,
+  });
+}
+
+export function useProductCategories() {
+  return useQuery({
+    queryKey: ['products', 'categories'],
+    queryFn: () => api.get('/products/categories').then((r) => r.data.data.categories),
+  });
+}
+
+export function useCreateProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body) => api.post('/products', body).then(unwrap),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['products'] });
+      qc.invalidateQueries({ queryKey: ['plan'] });
+    },
+  });
+}
+
+export function useUpdateProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...body }) => api.patch(`/products/${id}`, body).then(unwrap),
+    onSuccess: (_d, { id }) => {
+      qc.invalidateQueries({ queryKey: ['products'] });
+      qc.invalidateQueries({ queryKey: ['product', id] });
+      qc.invalidateQueries({ queryKey: ['plan'] });
+    },
+  });
+}
+
+export function useAdjustStock() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, delta }) => api.post(`/products/${id}/stock`, { delta }).then(unwrap),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+  });
+}
+
+export function useArchiveProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api.delete(`/products/${id}`).then(unwrap),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['products'] });
+      qc.invalidateQueries({ queryKey: ['plan'] });
+    },
+  });
+}
+
 /* ─────────────── Customers ─────────────── */
 export function useCustomers(filters = {}) {
   const params = new URLSearchParams();

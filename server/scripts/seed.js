@@ -12,6 +12,7 @@ import {
   Message,
   Order,
   Reminder,
+  Product,
 } from '../src/models/index.js';
 import { refreshCustomerRisk } from '../src/services/riskService.js';
 
@@ -22,13 +23,14 @@ const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const daysAgo = (n) => new Date(Date.now() - n * 24 * 60 * 60 * 1000);
 const toPaisa = (npr) => Math.round(npr * 100);
 
+// [name, priceNpr, category, stock (null = untracked)]
 const PRODUCTS = [
-  ['Cotton Kurta', 1400],
-  ['Pashmina Shawl', 3200],
-  ['Beaded Earrings', 650],
-  ['Leather Sandals', 2100],
-  ['Handmade Soap Set', 900],
-  ['Dhaka Topi', 800],
+  ['Cotton Kurta', 1400, 'Apparel', 24],
+  ['Pashmina Shawl', 3200, 'Apparel', 3],
+  ['Beaded Earrings', 650, 'Jewellery', 40],
+  ['Leather Sandals', 2100, 'Footwear', 12],
+  ['Handmade Soap Set', 900, 'Home & Living', null],
+  ['Dhaka Topi', 800, 'Apparel', 2],
 ];
 
 const NAMES = [
@@ -70,6 +72,7 @@ async function run() {
       Message.deleteMany({ seller: { $in: tenantIds } }),
       Order.deleteMany({ seller: { $in: tenantIds } }),
       Reminder.deleteMany({ seller: { $in: tenantIds } }),
+      Product.deleteMany({ seller: { $in: tenantIds } }),
       Seller.deleteMany({ _id: { $in: tenantIds } }),
     ]);
     console.log('  cleared previous demo tenants');
@@ -117,6 +120,25 @@ async function run() {
     webhookSubscribed: true,
     status: 'active',
   });
+
+  // 2b) Product catalog. Keyed by name so order items can link to real products.
+  const productByName = new Map();
+  for (let p = 0; p < PRODUCTS.length; p += 1) {
+    const [pname, price, category, stock] = PRODUCTS[p];
+    const tracked = stock !== null;
+    const product = await Product.create({
+      seller: tenantId,
+      name: pname,
+      sku: `DKN-P-${String(p + 1).padStart(6, '0')}`,
+      pricePaisa: toPaisa(price),
+      costPaisa: toPaisa(Math.round(price * 0.6)),
+      category,
+      trackInventory: tracked,
+      stock: tracked ? stock : 0,
+      status: 'active',
+    });
+    productByName.set(pname, product);
+  }
 
   // 3) Customers + conversations + messages + orders.
   let orderSeq = 0;
@@ -180,6 +202,7 @@ async function run() {
     const numOrders = 1 + (i % 3);
     for (let o = 0; o < numOrders; o += 1) {
       const [productName, price] = rand(PRODUCTS);
+      const linkedProduct = productByName.get(productName);
       const qty = 1 + (o % 2);
       orderSeq += 1;
       const subtotalPaisa = toPaisa(price) * qty;
@@ -196,7 +219,15 @@ async function run() {
         customer: customer._id,
         conversation: conversation._id,
         channelType: channel.type,
-        items: [{ productName, qty, unitPricePaisa: toPaisa(price) }],
+        items: [
+          {
+            product: linkedProduct?._id,
+            sku: linkedProduct?.sku,
+            productName,
+            qty,
+            unitPricePaisa: toPaisa(price),
+          },
+        ],
         subtotalPaisa,
         shippingPaisa,
         totalPaisa: subtotalPaisa + shippingPaisa,
@@ -208,6 +239,13 @@ async function run() {
         createdAt: daysAgo(o + i),
         updatedAt: daysAgo(o),
       });
+
+      if (linkedProduct) {
+        await Product.updateOne(
+          { _id: linkedProduct._id },
+          { $inc: { 'stats.unitsSold': qty, 'stats.revenuePaisa': subtotalPaisa } }
+        );
+      }
     }
 
     conversation.hasOrder = true;
@@ -233,7 +271,9 @@ async function run() {
   // Set the order counter to reflect seeded orders.
   await Seller.updateOne({ _id: tenantId }, { $set: { orderCountThisPeriod: orderSeq } });
 
-  console.log(`✅ Seeded ${NAMES.length} customers, ${orderSeq} orders, 2 channels.`);
+  console.log(
+    `✅ Seeded ${NAMES.length} customers, ${orderSeq} orders, ${PRODUCTS.length} products, 2 channels.`
+  );
   console.log('');
   console.log('   Demo login:');
   console.log(`     email:    ${DEMO_EMAIL}`);
