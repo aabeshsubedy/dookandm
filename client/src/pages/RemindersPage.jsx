@@ -58,7 +58,7 @@ export default function RemindersPage() {
 }
 
 function RemindersContent() {
-  const [view, setView] = useState('calendar'); // calendar | list
+  const [view, setView] = useState('list'); // list | calendar
   const [tab, setTab] = useState('open');
   const [month, setMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
@@ -157,16 +157,16 @@ function RemindersContent() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="inline-flex rounded-lg border border-border bg-surface p-0.5">
           <ViewTab
-            active={view === 'calendar'}
-            onClick={() => setView('calendar')}
-            icon={CalendarDays}
-            label="Calendar"
-          />
-          <ViewTab
             active={view === 'list'}
             onClick={() => setView('list')}
             icon={List}
             label="List"
+          />
+          <ViewTab
+            active={view === 'calendar'}
+            onClick={() => setView('calendar')}
+            icon={CalendarDays}
+            label="Calendar"
           />
         </div>
 

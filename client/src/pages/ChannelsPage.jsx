@@ -77,8 +77,8 @@ export default function ChannelsPage() {
   return (
     <Page>
       <PageHeader
-        title="Channels"
-        description="Connect Facebook Pages and Instagram business accounts."
+        title="Accounts"
+        description="Connect Meta accounts — Facebook Pages and Instagram business profiles."
         action={
           <Button variant="primary" onClick={connect}>
             <Plug className="h-4 w-4" /> Connect channel

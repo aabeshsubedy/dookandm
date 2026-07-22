@@ -60,7 +60,10 @@ export default function PlanPage() {
 
   return (
     <Page>
-      <PageHeader title="Plan & usage" description="Subscription, limits, and appearance." />
+      <PageHeader
+        title="Settings"
+        description="Appearance, accent colors, plan, and usage."
+      />
 
       <Card className="mt-5">
         <CardBody className="space-y-5">
