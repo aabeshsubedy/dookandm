@@ -1,7 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import { env } from '../config/env.js';
 
-const skip = () => env.isTest; // don't throttle during tests
+const skip = () => env.isTest || env.isDev; // don't throttle during tests or local dev
 
 const handler = (_req, res) =>
   res.status(429).json({

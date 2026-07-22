@@ -63,6 +63,7 @@ export const env = {
   ...raw,
   isProd: raw.NODE_ENV === 'production',
   isTest: raw.NODE_ENV === 'test',
+  isDev: raw.NODE_ENV === 'development',
   corsOrigins: raw.CORS_ORIGINS.split(',')
     .map((o) => o.trim())
     .filter(Boolean),
