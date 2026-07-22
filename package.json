@@ -1,0 +1,28 @@
+{
+  "name": "dokaandm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DokaanDM — Omnichannel inbox, order capture & lightweight CRM for Nepali social commerce sellers",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w client",
+    "seed": "npm run seed -w server",
+    "test": "npm run test -w server",
+    "lint": "npm run lint -w server && npm run lint -w client",
+    "format": "prettier --write \"**/*.{js,jsx,ts,json,md}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "prettier": "^3.4.2"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

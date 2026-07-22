@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/aabeshsubedy/development/DookanDM -type f 2>/dev/null; echo \"---memory---\"; ls -la /Users/aabeshsubedy/.claude/projects/-Users-aabeshsubedy-development-DookanDM/memory/ 2>/dev/null; echo \"---search pricing---\"; find /Users/aabeshsubedy -iname \"pricing_plan*\" 2>/dev/null | head; find /Users/aabeshsubedy -iname \"*MVP_Development*\" 2>/dev/null | head)",
+      "Read(//Users/aabeshsubedy/**)",
+      "Bash(npm install *)",
+      "Bash(npm test *)",
+      "Bash(npx vitest *)"
+    ]
+  }
+}

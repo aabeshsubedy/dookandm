@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="description"
+      content="DokaanDM — unified Facebook & Instagram inbox, order capture, and CRM for social commerce."
+    />
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var t = localStorage.getItem('dokaandm-theme') || 'system';
+          var dark =
+            t === 'dark' ||
+            (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) root.classList.add('dark');
+          root.style.colorScheme = dark ? 'dark' : 'light';
+
+          // Brand accent palettes (must match brandColors.js)
+          var accents = {
+            blue: {
+              light: { b: '37 99 235', h: '29 78 216', a: '30 64 175', s: '239 246 255' },
+              dark: { b: '59 130 246', h: '96 165 250', a: '37 99 235', s: '23 37 84' },
+            },
+            violet: {
+              light: { b: '124 58 237', h: '109 40 217', a: '91 33 182', s: '245 243 255' },
+              dark: { b: '167 139 250', h: '196 181 253', a: '139 92 246', s: '46 16 101' },
+            },
+            emerald: {
+              light: { b: '5 150 105', h: '4 120 87', a: '6 95 70', s: '236 253 245' },
+              dark: { b: '52 211 153', h: '110 231 183', a: '16 185 129', s: '6 46 34' },
+            },
+            rose: {
+              light: { b: '225 29 72', h: '190 18 60', a: '159 18 57', s: '255 241 242' },
+              dark: { b: '251 113 133', h: '253 164 175', a: '244 63 94', s: '76 5 25' },
+            },
+            amber: {
+              light: { b: '217 119 6', h: '180 83 9', a: '146 64 14', s: '255 251 235' },
+              dark: { b: '251 191 36', h: '252 211 77', a: '245 158 11', s: '69 40 8' },
+            },
+            indigo: {
+              light: { b: '79 70 229', h: '67 56 202', a: '55 48 163', s: '238 242 255' },
+              dark: { b: '129 140 248', h: '165 180 252', a: '99 102 241', s: '30 27 75' },
+            },
+          };
+          var accent = localStorage.getItem('dokaandm-accent') || 'blue';
+          if (!accents[accent]) accent = 'blue';
+          var mode = dark ? accents[accent].dark : accents[accent].light;
+          root.style.setProperty('--brand', mode.b);
+          root.style.setProperty('--brand-hover', mode.h);
+          root.style.setProperty('--brand-active', mode.a);
+          root.style.setProperty('--brand-soft', mode.s);
+          root.style.setProperty('--brand-fg', '255 255 255');
+          root.dataset.accent = accent;
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>DokaanDM</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

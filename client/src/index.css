@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  DokaanDM — solid SaaS design system
+  One brand accent. Neutral chrome. Full light/dark via CSS variables.
+*/
+
+@layer base {
+  :root {
+    --bg: 250 250 250;
+    --surface: 255 255 255;
+    --surface-2: 244 244 245;
+    --surface-3: 228 228 231;
+    --overlay: 9 9 11;
+
+    --border: 228 228 231;
+    --border-strong: 212 212 216;
+
+    --text: 24 24 27;
+    --text-2: 82 82 91;
+    --text-3: 161 161 170;
+    --text-inverse: 250 250 250;
+
+    /* Solid brand — overridden at runtime by accent palette (default Ocean blue) */
+    --brand: 37 99 235;
+    --brand-hover: 29 78 216;
+    --brand-active: 30 64 175;
+    --brand-fg: 255 255 255;
+    --brand-soft: 239 246 255;
+
+    --success: 22 163 74;
+    --success-soft: 240 253 244;
+    --warning: 217 119 6;
+    --warning-soft: 255 251 235;
+    --danger: 220 38 38;
+    --danger-soft: 254 242 242;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark {
+    --bg: 9 9 11;
+    --surface: 24 24 27;
+    --surface-2: 39 39 42;
+    --surface-3: 63 63 70;
+    --overlay: 0 0 0;
+
+    --border: 39 39 42;
+    --border-strong: 63 63 70;
+
+    --text: 250 250 250;
+    --text-2: 161 161 170;
+    --text-3: 113 113 122;
+    --text-inverse: 24 24 27;
+
+    /* Brand vars for dark mode are applied via JS accent palette.
+       Fallbacks if accent script has not run yet: */
+    --brand: 59 130 246;
+    --brand-hover: 96 165 250;
+    --brand-active: 37 99 235;
+    --brand-fg: 255 255 255;
+    --brand-soft: 23 37 84;
+
+    --success: 34 197 94;
+    --success-soft: 20 40 28;
+    --warning: 245 158 11;
+    --warning-soft: 45 35 12;
+    --danger: 248 113 113;
+    --danger-soft: 50 20 22;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans text-base antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand/50 ring-offset-2 ring-offset-bg;
+  }
+
+  ::selection {
+    @apply bg-brand/20 text-fg;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border-strong;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-fg-muted;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-border bg-surface shadow-xs;
+  }
+
+  .input-base {
+    @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-base text-fg
+      placeholder:text-fg-muted transition-colors duration-100
+      focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20
+      disabled:cursor-not-allowed disabled:bg-surface-2 disabled:opacity-60;
+  }
+
+  .label-base {
+    @apply mb-1.5 block text-sm font-medium text-fg-secondary;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-surface-2;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--text) / 0.04),
+      transparent
+    );
+    animation: shimmer 1.4s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .link-accent {
+    @apply font-medium text-brand transition-colors hover:text-brand-hover;
+  }
+}
+
+@layer utilities {
+  .bg-app {
+    @apply bg-bg;
+  }
+}
+
+/* Soft float for login social icons */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+/*
+  Orders kanban board
+  - Wider content (~13"+ with sidebar): 5 equal columns fill available width
+  - Narrower: track stays ≥1048px and scrolls horizontally so Delivered stays reachable
+  Math: 5 × 200px columns + 4 × 12px gaps = 1048px
+*/
+.board-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+}
+
+.board-track {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  /* never narrower than 5 readable columns; grow to fill parent when space allows */
+  width: max(100%, 1048px);
+  box-sizing: border-box;
+}
+
+.board-col {
+  flex: 1 1 0;
+  min-width: 200px;
+  max-width: none;
+}
+
+@media (max-width: 640px) {
+  .board-track {
+    width: max(100%, 920px);
+    gap: 0.5rem;
+  }
+
+  .board-col {
+    min-width: 176px;
+  }
+}
+
