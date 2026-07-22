@@ -12,7 +12,15 @@ import {
   defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
 import { ORDER_STATUS_TRANSITIONS, RISK_LABELS } from '@dokaandm/shared';
-import { GripVertical, Ban } from 'lucide-react';
+import {
+  GripVertical,
+  Ban,
+  Clock3,
+  CheckCircle2,
+  Truck,
+  Package,
+  RotateCcw,
+} from 'lucide-react';
 import { Avatar } from '../../components/common/Avatar.jsx';
 import { RiskBadge } from '../../components/common/RiskBadge.jsx';
 import { PaymentBadge } from '../../components/common/StatusBadge.jsx';
@@ -27,11 +35,41 @@ import { toast } from '../../store/toastStore.js';
 import { cn } from '../../lib/cn.js';
 
 const columnMeta = {
-  pending: { label: 'Pending', accent: 'border-t-warning', tint: 'bg-warning/5' },
-  confirmed: { label: 'Confirmed', accent: 'border-t-brand', tint: 'bg-brand/5' },
-  shipped: { label: 'Shipped', accent: 'border-t-fg-muted', tint: 'bg-surface-2/80' },
-  delivered: { label: 'Delivered', accent: 'border-t-success', tint: 'bg-success/5' },
-  returned: { label: 'Returned', accent: 'border-t-danger', tint: 'bg-danger/5' },
+  pending: {
+    label: 'Pending',
+    icon: Clock3,
+    accent: 'border-t-warning',
+    tint: 'bg-warning/[0.04]',
+    chip: 'bg-warning-soft text-warning',
+  },
+  confirmed: {
+    label: 'Confirmed',
+    icon: CheckCircle2,
+    accent: 'border-t-brand',
+    tint: 'bg-brand/[0.04]',
+    chip: 'bg-brand-soft text-brand',
+  },
+  shipped: {
+    label: 'Shipped',
+    icon: Truck,
+    accent: 'border-t-fg-muted',
+    tint: 'bg-surface-2/60',
+    chip: 'bg-surface-2 text-fg-secondary',
+  },
+  delivered: {
+    label: 'Delivered',
+    icon: Package,
+    accent: 'border-t-success',
+    tint: 'bg-success/[0.04]',
+    chip: 'bg-success-soft text-success',
+  },
+  returned: {
+    label: 'Returned',
+    icon: RotateCcw,
+    accent: 'border-t-danger',
+    tint: 'bg-danger/[0.04]',
+    chip: 'bg-danger-soft text-danger',
+  },
 };
 
 const COLUMN_ORDER = Object.keys(columnMeta);
@@ -72,7 +110,7 @@ const dropAnimation = {
 };
 
 /**
- * Professional kanban with drag-and-drop status changes.
+ * Kanban board with drag-and-drop status changes.
  * Honors ORDER_STATUS_TRANSITIONS; COD → confirmed opens risk confirmation.
  */
 export function OrderBoard({ board, isLoading, onOpen }) {
@@ -80,7 +118,7 @@ export function OrderBoard({ board, isLoading, onOpen }) {
   const [localBoard, setLocalBoard] = useState(() => cloneBoard(board));
   const [activeOrder, setActiveOrder] = useState(null);
   const [overStatus, setOverStatus] = useState(null);
-  const [codGate, setCodGate] = useState(null); // { order, toStatus }
+  const [codGate, setCodGate] = useState(null);
   const dragMoved = useRef(false);
 
   useEffect(() => {
@@ -89,7 +127,6 @@ export function OrderBoard({ board, isLoading, onOpen }) {
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      // Distinguish click (open drawer) from drag
       activationConstraint: { distance: 8 },
     }),
     useSensor(KeyboardSensor)
@@ -118,14 +155,12 @@ export function OrderBoard({ board, isLoading, onOpen }) {
         return;
       }
 
-      // Optimistic UI
       setLocalBoard((prev) => moveOrderOnBoard(prev, order._id, fromStatus, toStatus));
 
       try {
         await changeStatus.mutateAsync({ id: order._id, status: toStatus });
         toast.success(`Moved to ${columnMeta[toStatus]?.label || toStatus}`);
       } catch (err) {
-        // Revert
         setLocalBoard((prev) => moveOrderOnBoard(prev, order._id, toStatus, fromStatus));
         toast.error(apiError(err).message, 'Could not update status');
       }
@@ -145,7 +180,6 @@ export function OrderBoard({ board, isLoading, onOpen }) {
       setOverStatus(null);
       return;
     }
-    // over can be column id `col:status` or card id
     const status =
       typeof overId === 'string' && overId.startsWith('col:')
         ? overId.slice(4)
@@ -158,7 +192,6 @@ export function OrderBoard({ board, isLoading, onOpen }) {
     setActiveOrder(null);
     setOverStatus(null);
 
-    // Allow click shortly after if no real drop
     window.setTimeout(() => {
       dragMoved.current = false;
     }, 50);
@@ -175,11 +208,12 @@ export function OrderBoard({ board, isLoading, onOpen }) {
 
     if (!toStatus || toStatus === order.status) return;
     if (!canTransition(order.status, toStatus)) {
-      toast.info(`"${columnMeta[order.status]?.label}" cannot move to "${columnMeta[toStatus]?.label}"`);
+      toast.info(
+        `"${columnMeta[order.status]?.label}" cannot move to "${columnMeta[toStatus]?.label}"`
+      );
       return;
     }
 
-    // COD confirmation gate (same business rule as order drawer)
     if (toStatus === 'confirmed' && order.paymentType === 'cod') {
       setCodGate({ order, toStatus });
       return;
@@ -206,10 +240,10 @@ export function OrderBoard({ board, isLoading, onOpen }) {
       <BoardScroll>
         <div className="board-track">
           {COLUMN_ORDER.map((s) => (
-            <div key={s} className="board-col space-y-2">
-              <Skeleton className="h-8 w-full rounded-lg" />
-              <Skeleton className="h-24 w-full rounded-xl" />
-              <Skeleton className="h-24 w-full rounded-xl" />
+            <div key={s} className="board-col space-y-2.5">
+              <Skeleton className="h-11 w-full rounded-xl" />
+              <Skeleton className="h-28 w-full rounded-xl" />
+              <Skeleton className="h-28 w-full rounded-xl" />
             </div>
           ))}
         </div>
@@ -244,9 +278,7 @@ export function OrderBoard({ board, isLoading, onOpen }) {
                 <KanbanColumn
                   key={col.status}
                   status={col.status}
-                  label={meta.label}
-                  accent={meta.accent}
-                  tint={meta.tint}
+                  meta={meta}
                   total={col.total}
                   isValidDrop={isValidDrop}
                   isInvalidDrop={isInvalidDrop}
@@ -276,10 +308,9 @@ export function OrderBoard({ board, isLoading, onOpen }) {
         </DragOverlay>
       </DndContext>
 
-      {/* Hint while dragging */}
       {activeOrder && (
-        <p className="mt-2 text-center text-2xs text-fg-muted">
-          Drop on a highlighted column · Only allowed transitions are accepted
+        <p className="mt-3 text-center text-2xs text-fg-muted">
+          Drop on a highlighted column · only valid transitions are accepted
         </p>
       )}
 
@@ -310,9 +341,7 @@ export function OrderBoard({ board, isLoading, onOpen }) {
         }
       >
         {codGate?.order?.customer?._id || codGate?.order?.customerId ? (
-          <CodRiskPanel
-            customerId={codGate.order.customer?._id || codGate.order.customerId}
-          />
+          <CodRiskPanel customerId={codGate.order.customer?._id || codGate.order.customerId} />
         ) : (
           <p className="text-sm text-fg-secondary">
             Confirm cash-on-delivery for{' '}
@@ -330,9 +359,7 @@ function BoardScroll({ children }) {
 
 function KanbanColumn({
   status,
-  label,
-  accent,
-  tint,
+  meta,
   total,
   isValidDrop,
   isInvalidDrop,
@@ -342,18 +369,24 @@ function KanbanColumn({
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `col:${status}` });
   const highlight = isDragging && isValidDrop && (isOver || isActiveOver);
+  const Icon = meta.icon;
 
   return (
     <div className="board-col flex flex-col">
       <div
         className={cn(
-          'mb-2 flex items-center justify-between rounded-lg border border-border border-t-2 bg-surface px-3 py-2 transition-shadow',
-          accent,
-          highlight && 'ring-2 ring-brand/40 shadow-sm'
+          'mb-2.5 flex items-center justify-between gap-2 rounded-xl border border-border border-t-2 bg-surface px-3 py-2.5 shadow-xs transition-shadow',
+          meta.accent,
+          highlight && 'shadow-sm ring-2 ring-brand/30'
         )}
       >
-        <span className="truncate text-sm font-medium text-fg">{label}</span>
-        <span className="ml-2 shrink-0 rounded-md bg-surface-2 px-1.5 py-0.5 text-xs font-medium tabular-nums text-fg-muted">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className={cn('grid h-6 w-6 shrink-0 place-items-center rounded-md', meta.chip)}>
+            <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
+          </span>
+          <span className="truncate text-sm font-semibold tracking-tight text-fg">{meta.label}</span>
+        </div>
+        <span className="shrink-0 rounded-md bg-surface-2 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-fg-secondary">
           {total}
         </span>
       </div>
@@ -361,16 +394,16 @@ function KanbanColumn({
       <div
         ref={setNodeRef}
         className={cn(
-          'min-h-[120px] flex-1 space-y-2 rounded-xl p-1.5 transition-all duration-150',
-          tint,
-          highlight && 'bg-brand-soft/60 ring-2 ring-inset ring-brand/35',
-          isInvalidDrop && isDragging && 'opacity-50',
-          isInvalidDrop && isOver && 'ring-2 ring-inset ring-danger/30'
+          'min-h-[140px] flex-1 space-y-2 rounded-xl p-1.5 transition-all duration-150',
+          meta.tint,
+          highlight && 'bg-brand-soft/50 ring-2 ring-inset ring-brand/25',
+          isInvalidDrop && isDragging && 'opacity-45',
+          isInvalidDrop && isOver && 'ring-2 ring-inset ring-danger/25'
         )}
       >
         {children}
         {isInvalidDrop && isOver && (
-          <div className="flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-danger/40 bg-danger-soft/50 px-2 py-3 text-2xs font-medium text-danger">
+          <div className="flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-danger/35 bg-danger-soft/40 px-2 py-3 text-2xs font-medium text-danger">
             <Ban className="h-3.5 w-3.5" /> Not allowed
           </div>
         )}
@@ -383,11 +416,11 @@ function EmptyDropZone({ isValidDrop }) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-dashed border-border py-8 text-center text-xs text-fg-muted transition-colors',
-        isValidDrop && 'border-brand/50 bg-brand-soft/40 text-brand'
+        'rounded-xl border border-dashed border-border/80 py-10 text-center text-xs text-fg-muted transition-colors',
+        isValidDrop && 'border-brand/40 bg-brand-soft/30 text-brand'
       )}
     >
-      {isValidDrop ? 'Drop here' : 'Empty'}
+      {isValidDrop ? 'Drop here' : 'No orders'}
     </div>
   );
 }
@@ -406,10 +439,7 @@ function DraggableOrderCard({ order, onOpen, isDragSource }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={cn(
-        'touch-none',
-        isDragging || isDragSource ? 'opacity-30' : 'opacity-100'
-      )}
+      className={cn('touch-none', isDragging || isDragSource ? 'opacity-30' : 'opacity-100')}
       {...listeners}
       {...attributes}
     >
@@ -421,6 +451,7 @@ function DraggableOrderCard({ order, onOpen, isDragSource }) {
 function OrderCardVisual({ order: o, onOpen, overlay }) {
   const name = o.customer?.name || o.phone;
   const risk = o.customer?.riskCache?.label;
+  const items = (o.items || []).map((i) => `${i.qty}× ${i.productName}`).join(', ');
 
   return (
     <div
@@ -445,18 +476,17 @@ function OrderCardVisual({ order: o, onOpen, overlay }) {
           : undefined
       }
       className={cn(
-        'group w-full cursor-grab rounded-lg border border-border bg-surface p-3 text-left transition-all active:cursor-grabbing',
-        'hover:border-border-strong hover:bg-surface-2/40',
-        overlay &&
-          'cursor-grabbing shadow-lg ring-2 ring-brand/30 scale-[1.02] rotate-[0.5deg]'
+        'group w-full cursor-grab rounded-xl border border-border bg-surface p-3 text-left shadow-xs transition-all active:cursor-grabbing',
+        'hover:border-border-strong hover:shadow-sm',
+        overlay && 'cursor-grabbing rotate-[0.6deg] scale-[1.02] shadow-lg ring-2 ring-brand/25'
       )}
     >
       <div className="flex items-start gap-1.5">
         <span
           className={cn(
             'mt-0.5 -ml-0.5 shrink-0 rounded p-0.5 text-fg-muted',
-            'opacity-50 group-hover:opacity-100',
-            overlay && 'opacity-100'
+            'opacity-40 transition-opacity group-hover:opacity-80',
+            overlay && 'opacity-80'
           )}
           aria-hidden
         >
@@ -465,19 +495,24 @@ function OrderCardVisual({ order: o, onOpen, overlay }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
-            <span className="truncate text-xs font-medium text-fg-muted">{o.orderNumber}</span>
-            <span className="shrink-0 text-sm font-semibold tabular-nums text-fg">
+            <span className="truncate text-2xs font-semibold uppercase tracking-wide text-fg-muted">
+              {o.orderNumber}
+            </span>
+            <span className="shrink-0 text-sm font-semibold tabular-nums tracking-tight text-fg">
               {nprLabel(o.totalPaisa)}
             </span>
           </div>
-          <div className="mt-2 flex min-w-0 items-center gap-2">
+
+          <div className="mt-2.5 flex min-w-0 items-center gap-2">
             <Avatar name={name} size="xs" />
-            <span className="min-w-0 flex-1 truncate text-sm text-fg">{name}</span>
+            <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">{name}</span>
           </div>
-          <p className="mt-1.5 truncate text-xs text-fg-muted">
-            {(o.items || []).map((i) => `${i.qty}× ${i.productName}`).join(', ')}
-          </p>
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+
+          {items && (
+            <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-fg-muted">{items}</p>
+          )}
+
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
             <PaymentBadge type={o.paymentType} />
             {risk && RISK_LABELS.includes(risk) && risk !== 'new' && <RiskBadge label={risk} />}
           </div>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Inbox as InboxIcon } from 'lucide-react';
+import { Inbox as InboxIcon, Keyboard } from 'lucide-react';
 import { ConversationList } from '../features/inbox/ConversationList.jsx';
 import { MessageThread } from '../features/inbox/MessageThread.jsx';
 import { InboxContextPanel } from '../features/inbox/InboxContextPanel.jsx';
@@ -54,18 +54,18 @@ export default function InboxPage() {
       const typing = tag === 'INPUT' || tag === 'TEXTAREA';
       if (e.key === '/' && !typing) {
         e.preventDefault();
-        listRef.current?.querySelector('input')?.focus();
+        document.querySelector('input[aria-label="Search conversations"]')?.focus();
         return;
       }
       if (typing) return;
       const idx = conversations.findIndex((c) => c._id === conversationId);
       if (e.key === 'j' || e.key === 'ArrowDown') {
         e.preventDefault();
-        const next = conversations[Math.min(conversations.length - 1, idx + 1)];
+        const next = conversations[Math.min(conversations.length - 1, Math.max(0, idx) + 1)];
         if (next) navigate(`/inbox/${next._id}`);
       } else if (e.key === 'k' || e.key === 'ArrowUp') {
         e.preventDefault();
-        const prev = conversations[Math.max(0, idx - 1)];
+        const prev = conversations[Math.max(0, (idx < 0 ? 0 : idx) - 1)];
         if (prev) navigate(`/inbox/${prev._id}`);
       } else if (e.key === 'r' && conversationId) {
         e.preventDefault();
@@ -80,10 +80,12 @@ export default function InboxPage() {
   const orders = activeConversation?.orders || [];
 
   return (
-    <div className="flex h-full w-full min-w-0">
+    <div className="flex h-full w-full min-w-0 bg-bg">
       {/* List — hidden on mobile when a thread is open */}
       <div
-        className={`${conversationId ? 'hidden lg:flex' : 'flex'} w-full shrink-0 flex-col lg:w-80 xl:w-96`}
+        className={`${
+          conversationId ? 'hidden lg:flex' : 'flex'
+        } w-full shrink-0 flex-col lg:w-[22rem] xl:w-[24rem]`}
       >
         <ConversationList
           conversations={conversations}
@@ -100,7 +102,9 @@ export default function InboxPage() {
 
       {/* Thread — fills remaining width */}
       <div
-        className={`${conversationId ? 'flex' : 'hidden lg:flex'} min-w-0 flex-1 flex-col`}
+        className={`${
+          conversationId ? 'flex' : 'hidden lg:flex'
+        } min-w-0 flex-1 flex-col border-r border-border/0`}
       >
         {conv ? (
           <MessageThread
@@ -110,17 +114,32 @@ export default function InboxPage() {
             composerRef={composerRef}
           />
         ) : (
-          <div className="hidden h-full w-full flex-1 items-center justify-center bg-bg lg:flex">
+          <div className="hidden h-full w-full flex-1 flex-col items-center justify-center bg-bg lg:flex">
             <EmptyState
               icon={InboxIcon}
               title="Select a conversation"
-              description="Pick a chat from the list, or use j / k to move and Enter to open."
+              description="Pick a chat from the list to reply, capture an order, or review COD risk."
+              action={
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-fg-muted shadow-xs">
+                  <Keyboard className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
+                  <span>
+                    <kbd className="rounded border border-border bg-surface-2 px-1 py-px font-sans">j</kbd>
+                    {' / '}
+                    <kbd className="rounded border border-border bg-surface-2 px-1 py-px font-sans">k</kbd>
+                    {' navigate · '}
+                    <kbd className="rounded border border-border bg-surface-2 px-1 py-px font-sans">/</kbd>
+                    {' search · '}
+                    <kbd className="rounded border border-border bg-surface-2 px-1 py-px font-sans">r</kbd>
+                    {' reply'}
+                  </span>
+                </div>
+              }
             />
           </div>
         )}
       </div>
 
-      {/* Context */}
+      {/* Context sidebar */}
       {conv && (
         <InboxContextPanel
           conversation={conv}

@@ -167,6 +167,25 @@
   }
 }
 
+/* Dashboard panels — calm, consistent chrome */
+.dash-panel {
+  @apply overflow-hidden rounded-2xl border border-border bg-surface shadow-xs;
+}
+
+/* Inbox thread — subtle canvas so bubbles lift off the surface */
+.inbox-thread-scroll {
+  background-color: rgb(var(--bg));
+  background-image:
+    radial-gradient(rgb(var(--border) / 0.55) 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+  background-position: 0 0;
+}
+
+html.dark .inbox-thread-scroll {
+  background-image:
+    radial-gradient(rgb(var(--border) / 0.35) 0.5px, transparent 0.5px);
+}
+
 /* Soft float for login social icons */
 @keyframes float-soft {
   0%,

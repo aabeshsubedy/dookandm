@@ -44,6 +44,7 @@ router.get('/catalog', (_req, res) => {
     channels: serialize(v.channels),
     ordersPerMonth: serialize(v.ordersPerMonth),
     customers: serialize(v.customers),
+    products: serialize(v.products),
     teamLogins: serialize(v.teamLogins),
     features: Array.from(v.features),
     support: v.support,

@@ -805,7 +805,7 @@ function ProductDeepDive() {
       id: 'crm',
       eyebrow: 'CRM & catalog',
       title: 'Remember the relationship',
-      text: 'Phone identity across channels means one customer profile — order history, LTV, notes, tags, and date-based reminders that surface on the dashboard.',
+      text: 'Phone identity across channels means one customer profile — order history, total spent, notes, tags, and date-based reminders that surface on the dashboard.',
       bullets: [
         'Provisional profiles promote when phone appears',
         'Product catalog with SKU search & stock',
@@ -830,7 +830,7 @@ function ProductDeepDive() {
             <div className="grid grid-cols-3 gap-2">
               {[
                 { l: 'Orders', v: '11' },
-                { l: 'LTV', v: 'NPR 42k' },
+                { l: 'Total spent', v: 'NPR 42k' },
                 { l: 'Returns', v: '0' },
               ].map((x) => (
                 <div key={x.l} className="rounded-lg bg-surface-2 px-2 py-2 text-center">

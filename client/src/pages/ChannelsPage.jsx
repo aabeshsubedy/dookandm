@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Facebook, Instagram, Plug, CheckCircle2, AlertTriangle, RefreshCw, Trash2 } from 'lucide-react';
-import { Page, PageHeader } from '../components/layout/PageHeader.jsx';
-import { Card, CardBody } from '../components/ui/Card.jsx';
+import {
+  Facebook,
+  Instagram,
+  Plug,
+  CheckCircle2,
+  AlertTriangle,
+  RefreshCw,
+  Trash2,
+  Webhook,
+} from 'lucide-react';
+import { Page } from '../components/layout/PageHeader.jsx';
 import { Button } from '../components/ui/Button.jsx';
-import { Badge } from '../components/ui/Badge.jsx';
 import { EmptyState } from '../components/ui/EmptyState.jsx';
-import { LoadingPanel } from '../components/ui/Skeleton.jsx';
+import { Skeleton } from '../components/ui/Skeleton.jsx';
 import { PasswordConfirmModal } from '../components/ui/PasswordConfirmModal.jsx';
 import { useChannels } from '../hooks/data.js';
 import { api, apiError } from '../lib/api.js';
@@ -14,6 +21,7 @@ import { useAuthStore } from '../store/authStore.js';
 import { toast } from '../store/toastStore.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { relativeTime } from '../lib/format.js';
+import { cn } from '../lib/cn.js';
 
 const metaMessages = {
   connected: ['success', 'Channel connected successfully.'],
@@ -47,6 +55,10 @@ export default function ChannelsPage() {
   const channels = data?.channels || [];
   const metaConfigured = data?.metaConfigured;
   const channelLimit = plan?.limits?.channels;
+  const unlimited = channelLimit == null;
+  const usagePct = unlimited
+    ? 0
+    : Math.min(100, Math.round((channels.length / Math.max(channelLimit, 1)) * 100));
 
   const runConnect = async () => {
     try {
@@ -91,130 +103,217 @@ export default function ChannelsPage() {
     }
   };
 
-  const passwordModal = (
-    <PasswordConfirmModal
-      open={!!pending}
-      onClose={() => setPending(null)}
-      onConfirm={confirmPending}
-      title={
-        pending?.type === 'disconnect' ? 'Disconnect account' : 'Connect Meta account'
-      }
-      description={
-        pending?.type === 'disconnect'
-          ? `Enter your password to disconnect${pending.name ? ` “${pending.name}”` : ''}.`
-          : 'Enter your password to continue connecting a Facebook or Instagram account.'
-      }
-      confirmLabel={pending?.type === 'disconnect' ? 'Disconnect' : 'Continue'}
-    />
-  );
-
   return (
     <Page>
-      <PageHeader
-        title="Accounts"
-        description="Connect Meta accounts — Facebook Pages and Instagram business profiles."
-        action={
-          <Button variant="primary" onClick={() => setPending({ type: 'connect' })}>
-            <Plug className="h-4 w-4" /> Connect channel
-          </Button>
-        }
-      />
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-tight text-fg">Accounts</h1>
+          <p className="mt-1 text-sm text-fg-muted">
+            Connect Facebook Pages and Instagram business profiles
+          </p>
+        </div>
+        <Button variant="primary" size="sm" onClick={() => setPending({ type: 'connect' })}>
+          <Plug className="h-3.5 w-3.5" strokeWidth={1.75} />
+          Connect channel
+        </Button>
+      </header>
 
       {!metaConfigured && (
-        <div className="mt-5 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning-soft px-4 py-3">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-          <div className="text-sm text-fg">
-            <p className="font-medium">Meta integration is not configured on this server.</p>
-            <p className="mt-0.5 text-fg-secondary">
-              Add <code className="rounded bg-surface px-1 text-xs">META_APP_ID</code> and{' '}
-              <code className="rounded bg-surface px-1 text-xs">META_APP_SECRET</code> to enable live
-              connections. Demo data still works.
+        <div className="mt-5 flex items-start gap-3 rounded-xl border border-warning/25 bg-warning-soft/60 px-4 py-3.5">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-warning-soft text-warning">
+            <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
+          </div>
+          <div className="min-w-0 text-sm">
+            <p className="font-semibold text-fg">Meta is not configured on this server</p>
+            <p className="mt-0.5 leading-relaxed text-fg-secondary">
+              Add <code className="rounded-md bg-surface px-1.5 py-0.5 text-2xs font-mono">META_APP_ID</code>{' '}
+              and{' '}
+              <code className="rounded-md bg-surface px-1.5 py-0.5 text-2xs font-mono">
+                META_APP_SECRET
+              </code>{' '}
+              to enable live connections. Demo data still works without them.
             </p>
           </div>
         </div>
       )}
 
-      {channelLimit != null && (
-        <p className="mt-4 text-sm text-fg-muted">
-          Using {channels.length} of {channelLimit} channel{channelLimit === 1 ? '' : 's'} on{' '}
-          <span className="font-medium text-fg-secondary">{plan?.label}</span>.
-        </p>
+      {!unlimited && (
+        <div className="mt-5 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-3.5 py-2.5 shadow-xs">
+          <span className="text-xs text-fg-secondary">
+            <span className="font-semibold tabular-nums text-fg">{channels.length}</span>
+            <span className="text-fg-muted">
+              {' '}
+              / {channelLimit} channel{channelLimit === 1 ? '' : 's'}
+            </span>
+            <span className="text-fg-muted"> · {plan?.label || 'Free'} plan</span>
+          </span>
+          <div className="h-1.5 min-w-[6rem] max-w-xs flex-1 overflow-hidden rounded-full bg-surface-2">
+            <div
+              className={cn(
+                'h-full rounded-full transition-all',
+                usagePct >= 90 ? 'bg-danger/70' : usagePct >= 80 ? 'bg-warning/70' : 'bg-brand/65'
+              )}
+              style={{ width: `${usagePct}%` }}
+            />
+          </div>
+        </div>
       )}
 
-      <div className="mt-4">
+      <div className="mt-5">
         {isLoading ? (
-          <LoadingPanel />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 shadow-xs"
+              >
+                <Skeleton className="h-11 w-11 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : channels.length === 0 ? (
-          <Card>
+          <div className="rounded-2xl border border-border bg-surface shadow-xs">
             <EmptyState
               icon={Plug}
               title="No channels connected"
-              description="Connect Facebook or Instagram to receive DMs in your unified inbox."
+              description="Connect Facebook or Instagram so DMs land in your unified inbox."
               action={
-                <Button variant="primary" onClick={() => setPending({ type: 'connect' })}>
-                  <Plug className="h-4 w-4" /> Connect channel
+                <Button variant="primary" size="sm" onClick={() => setPending({ type: 'connect' })}>
+                  <Plug className="h-3.5 w-3.5" />
+                  Connect channel
                 </Button>
               }
+              className="py-14"
             />
-          </Card>
+          </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {channels.map((c) => (
-              <Card key={c._id}>
-                <CardBody className="flex items-center gap-3">
-                  <div
-                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${
-                      c.type === 'instagram'
-                        ? 'bg-[#E1306C]/10 text-[#E1306C] dark:bg-[#E1306C]/15 dark:text-[#f472b6]'
-                        : 'bg-[#1877F2]/10 text-[#1877F2] dark:bg-[#1877F2]/15 dark:text-[#4b9bff]'
-                    }`}
-                  >
-                    {c.type === 'instagram' ? (
-                      <Instagram className="h-5 w-5" />
-                    ) : (
-                      <Facebook className="h-5 w-5" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-fg">{c.name}</p>
-                    <div className="mt-0.5 flex items-center gap-2">
-                      {c.status === 'active' ? (
-                        <Badge tone="good">
-                          <CheckCircle2 className="h-3 w-3" /> Active
-                        </Badge>
-                      ) : (
-                        <Badge tone="neutral">{c.status}</Badge>
-                      )}
-                      {c.webhookSubscribed && (
-                        <span className="text-2xs text-fg-muted">Webhooks on</span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-2xs text-fg-muted">Connected {relativeTime(c.createdAt)}</p>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => sync(c._id)} aria-label="Sync">
-                      <RefreshCw className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-fg-muted hover:text-danger"
-                      onClick={() =>
-                        setPending({ type: 'disconnect', id: c._id, name: c.name })
-                      }
-                      aria-label="Disconnect"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
+              <ChannelCard
+                key={c._id}
+                channel={c}
+                onSync={() => sync(c._id)}
+                onDisconnect={() =>
+                  setPending({ type: 'disconnect', id: c._id, name: c.name })
+                }
+              />
             ))}
           </div>
         )}
       </div>
 
-      {passwordModal}
+      {/* Help strip */}
+      <div className="mt-6 rounded-2xl border border-border bg-surface px-4 py-4 shadow-xs sm:px-5">
+        <p className="text-sm font-semibold text-fg">How connections work</p>
+        <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-fg-secondary">
+          <li className="flex gap-2">
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-fg-muted" />
+            You connect via Meta OAuth — we never see your Facebook password.
+          </li>
+          <li className="flex gap-2">
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-fg-muted" />
+            Messages arrive through webhooks into the unified inbox.
+          </li>
+          <li className="flex gap-2">
+            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-fg-muted" />
+            Disconnect anytime. Existing conversations and orders stay in DokaanDM.
+          </li>
+        </ul>
+      </div>
+
+      <PasswordConfirmModal
+        open={!!pending}
+        onClose={() => setPending(null)}
+        onConfirm={confirmPending}
+        title={pending?.type === 'disconnect' ? 'Disconnect account' : 'Connect Meta account'}
+        description={
+          pending?.type === 'disconnect'
+            ? `Enter your password to disconnect${pending.name ? ` “${pending.name}”` : ''}.`
+            : 'Enter your password to continue connecting a Facebook or Instagram account.'
+        }
+        confirmLabel={pending?.type === 'disconnect' ? 'Disconnect' : 'Continue'}
+      />
     </Page>
+  );
+}
+
+function ChannelCard({ channel: c, onSync, onDisconnect }) {
+  const isIg = c.type === 'instagram';
+  const active = c.status === 'active';
+
+  return (
+    <article
+      className={cn(
+        'flex items-start gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-xs',
+        'transition-colors hover:border-border-strong'
+      )}
+    >
+      <div
+        className={cn(
+          'grid h-11 w-11 shrink-0 place-items-center rounded-xl',
+          isIg
+            ? 'bg-[#E1306C]/10 text-[#E1306C] dark:bg-[#E1306C]/15 dark:text-[#f472b6]'
+            : 'bg-[#1877F2]/10 text-[#1877F2] dark:bg-[#1877F2]/15 dark:text-[#4b9bff]'
+        )}
+      >
+        {isIg ? (
+          <Instagram className="h-5 w-5" strokeWidth={1.75} />
+        ) : (
+          <Facebook className="h-5 w-5" strokeWidth={1.75} />
+        )}
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold tracking-tight text-fg">{c.name}</p>
+        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-2xs font-medium',
+              active ? 'bg-success-soft text-success' : 'bg-surface-2 text-fg-muted'
+            )}
+          >
+            {active && <CheckCircle2 className="h-3 w-3" strokeWidth={2} />}
+            {active ? 'Active' : c.status}
+          </span>
+          <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-2xs font-medium capitalize text-fg-muted">
+            {isIg ? 'Instagram' : 'Facebook'}
+          </span>
+          {c.webhookSubscribed && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-1.5 py-0.5 text-2xs text-fg-muted">
+              <Webhook className="h-3 w-3" strokeWidth={1.75} />
+              Webhooks
+            </span>
+          )}
+        </div>
+        <p className="mt-2 text-2xs text-fg-muted">Connected {relativeTime(c.createdAt)}</p>
+      </div>
+
+      <div className="flex shrink-0 flex-col gap-0.5">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={onSync}
+          aria-label="Sync channel"
+          title="Sync"
+        >
+          <RefreshCw className="h-3.5 w-3.5" strokeWidth={1.75} />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-fg-muted hover:text-danger"
+          onClick={onDisconnect}
+          aria-label="Disconnect channel"
+          title="Disconnect"
+        >
+          <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
+        </Button>
+      </div>
+    </article>
   );
 }
