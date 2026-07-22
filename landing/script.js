@@ -1,85 +1,89 @@
 /**
- * DokaanDM Landing — vanilla JS
- * Theme toggle · mobile nav · FAQ accordion · billing toggle · chart bars
+ * DokaanDM static landing — theme, nav, FAQ, pricing, screenshot theme switch
  */
-
 (function () {
   'use strict';
 
-  const THEME_KEY = 'dokaandm-landing-theme';
-
-  /* ── Theme ───────────────────────────────────────────────────────────── */
+  var THEME_KEY = 'dokaandm-landing-theme';
 
   function getStoredTheme() {
     try {
       return localStorage.getItem(THEME_KEY) || 'system';
-    } catch {
+    } catch (e) {
       return 'system';
     }
   }
 
-  function resolveTheme(preference) {
-    if (preference === 'dark') return 'dark';
-    if (preference === 'light') return 'light';
+  function resolveTheme(pref) {
+    if (pref === 'dark') return 'dark';
+    if (pref === 'light') return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function applyTheme(preference) {
-    const resolved = resolveTheme(preference);
-    document.documentElement.classList.toggle('dark', resolved === 'dark');
+  function applyTheme(pref) {
+    var resolved = resolveTheme(pref);
+    var isDark = resolved === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
 
-    const sun = document.querySelector('.icon-sun');
-    const moon = document.querySelector('.icon-moon');
+    var sun = document.querySelector('.icon-sun');
+    var moon = document.querySelector('.icon-moon');
     if (sun && moon) {
-      // Show sun when dark (click → light); moon when light (click → dark)
-      sun.hidden = resolved !== 'dark';
-      moon.hidden = resolved === 'dark';
+      sun.hidden = !isDark;
+      moon.hidden = isDark;
     }
 
-    const toggle = document.getElementById('theme-toggle');
+    var toggle = document.getElementById('theme-toggle');
     if (toggle) {
       toggle.setAttribute(
         'aria-label',
-        resolved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+        isDark ? 'Switch to light mode' : 'Switch to dark mode'
       );
     }
+
+    // Swap product screenshots
+    document.querySelectorAll('.shot-viewport').forEach(function (vp) {
+      var light = vp.querySelector('.shot-light');
+      var dark = vp.querySelector('.shot-dark');
+      if (!light || !dark) return;
+      if (isDark) {
+        light.classList.add('is-hidden');
+        dark.classList.remove('is-hidden');
+        dark.removeAttribute('aria-hidden');
+        light.setAttribute('aria-hidden', 'true');
+      } else {
+        dark.classList.add('is-hidden');
+        light.classList.remove('is-hidden');
+        light.removeAttribute('aria-hidden');
+        dark.setAttribute('aria-hidden', 'true');
+      }
+    });
   }
 
   function cycleTheme() {
-    const current = getStoredTheme();
-    const resolved = resolveTheme(current);
-    // Toggle light ↔ dark (persist explicit choice)
-    const next = resolved === 'dark' ? 'light' : 'dark';
+    var current = resolveTheme(getStoredTheme());
+    var next = current === 'dark' ? 'light' : 'dark';
     try {
       localStorage.setItem(THEME_KEY, next);
-    } catch {
-      /* ignore */
-    }
+    } catch (e) {}
     applyTheme(next);
   }
 
-  /* ── Header scroll ───────────────────────────────────────────────────── */
-
   function initHeaderScroll() {
-    const header = document.getElementById('site-header');
+    var header = document.getElementById('site-header');
     if (!header) return;
-
-    const onScroll = () => {
+    var onScroll = function () {
       header.classList.toggle('is-scrolled', window.scrollY > 8);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* ── Mobile menu ─────────────────────────────────────────────────────── */
-
   function initMobileMenu() {
-    const toggle = document.getElementById('menu-toggle');
-    const panel = document.getElementById('mobile-panel');
+    var toggle = document.getElementById('menu-toggle');
+    var panel = document.getElementById('mobile-panel');
     if (!toggle || !panel) return;
-
-    const menuIcon = toggle.querySelector('.icon-menu');
-    const closeIcon = toggle.querySelector('.icon-close');
+    var menuIcon = toggle.querySelector('.icon-menu');
+    var closeIcon = toggle.querySelector('.icon-close');
 
     function isOpen() {
       return panel.classList.contains('is-open');
@@ -93,57 +97,50 @@
       if (closeIcon) closeIcon.hidden = !open;
     }
 
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener('click', function () {
       setOpen(!isOpen());
     });
-
-    panel.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => setOpen(false));
+    panel.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        setOpen(false);
+      });
     });
-
-    // Close on escape
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen()) setOpen(false);
     });
   }
 
-  /* ── Smooth anchor scroll (offset for sticky header) ─────────────────── */
-
   function initSmoothAnchors() {
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener('click', (e) => {
-        const id = anchor.getAttribute('href');
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener('click', function (e) {
+        var id = anchor.getAttribute('href');
         if (!id || id === '#') return;
-        const target = document.querySelector(id);
+        var target = document.querySelector(id);
         if (!target) return;
         e.preventDefault();
-        const headerH = document.getElementById('site-header')?.offsetHeight || 64;
-        const top = target.getBoundingClientRect().top + window.scrollY - headerH - 8;
-        window.scrollTo({ top, behavior: 'smooth' });
-        history.pushState(null, '', id);
+        var headerH = document.getElementById('site-header')
+          ? document.getElementById('site-header').offsetHeight
+          : 64;
+        var top = target.getBoundingClientRect().top + window.scrollY - headerH - 8;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        if (history.pushState) history.pushState(null, '', id);
       });
     });
   }
 
-  /* ── FAQ accordion ───────────────────────────────────────────────────── */
-
   function initFaq() {
-    const list = document.getElementById('faq-list');
+    var list = document.getElementById('faq-list');
     if (!list) return;
-
-    list.querySelectorAll('.faq-trigger').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.faq-item');
-        const isOpen = item.classList.contains('is-open');
-
-        // Close all
-        list.querySelectorAll('.faq-item').forEach((el) => {
+    list.querySelectorAll('.faq-trigger').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('.faq-item');
+        var wasOpen = item.classList.contains('is-open');
+        list.querySelectorAll('.faq-item').forEach(function (el) {
           el.classList.remove('is-open');
-          el.querySelector('.faq-trigger')?.setAttribute('aria-expanded', 'false');
+          var t = el.querySelector('.faq-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
         });
-
-        // Open clicked if it was closed
-        if (!isOpen) {
+        if (!wasOpen) {
           item.classList.add('is-open');
           btn.setAttribute('aria-expanded', 'true');
         }
@@ -151,82 +148,59 @@
     });
   }
 
-  /* ── Pricing billing toggle ──────────────────────────────────────────── */
-
   function initBillingToggle() {
-    const monthlyBtn = document.getElementById('billing-monthly');
-    const annualBtn = document.getElementById('billing-annual');
+    var monthlyBtn = document.getElementById('billing-monthly');
+    var annualBtn = document.getElementById('billing-annual');
     if (!monthlyBtn || !annualBtn) return;
-
-    let annual = false;
+    var annual = false;
 
     function update() {
       monthlyBtn.classList.toggle('is-active', !annual);
       annualBtn.classList.toggle('is-active', annual);
-
-      document.querySelectorAll('[data-price-monthly]').forEach((el) => {
+      document.querySelectorAll('[data-price-monthly]').forEach(function (el) {
         el.textContent = annual
           ? el.getAttribute('data-price-annual')
           : el.getAttribute('data-price-monthly');
       });
-
-      document.querySelectorAll('[data-sub-monthly]').forEach((el) => {
+      document.querySelectorAll('[data-sub-monthly]').forEach(function (el) {
         el.textContent = annual
           ? el.getAttribute('data-sub-annual')
           : el.getAttribute('data-sub-monthly');
       });
     }
 
-    monthlyBtn.addEventListener('click', () => {
+    monthlyBtn.addEventListener('click', function () {
       annual = false;
       update();
     });
-    annualBtn.addEventListener('click', () => {
+    annualBtn.addEventListener('click', function () {
       annual = true;
       update();
     });
   }
 
-  /* ── Chart bars ──────────────────────────────────────────────────────── */
-
-  function initChart() {
-    const container = document.getElementById('chart-bars');
-    if (!container) return;
-
-    const heights = [
-      40, 55, 35, 70, 50, 85, 60, 75, 45, 90, 65, 80, 55, 95, 70, 60, 88, 72, 50, 92, 68, 78, 58, 84,
-      76, 62, 90, 70, 85, 95,
-    ];
-
-    const frag = document.createDocumentFragment();
-    heights.forEach((h) => {
-      const bar = document.createElement('span');
-      bar.style.height = h + '%';
-      bar.style.opacity = String(0.4 + (h / 100) * 0.6);
-      frag.appendChild(bar);
-    });
-    container.appendChild(frag);
-  }
-
-  /* ── Footer year ─────────────────────────────────────────────────────── */
-
   function initYear() {
-    const el = document.getElementById('year');
+    var el = document.getElementById('year');
     if (el) el.textContent = String(new Date().getFullYear());
   }
 
-  /* ── System theme listener ───────────────────────────────────────────── */
-
   function initSystemThemeListener() {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var handler = function () {
       if (getStoredTheme() === 'system') applyTheme('system');
     };
     if (mq.addEventListener) mq.addEventListener('change', handler);
     else if (mq.addListener) mq.addListener(handler);
   }
 
-  /* ── Boot ────────────────────────────────────────────────────────────── */
+  function preloadShots() {
+    ['dashboard', 'inbox', 'orders', 'products', 'customers'].forEach(function (key) {
+      ['light', 'dark'].forEach(function (mode) {
+        var img = new Image();
+        img.src = './screenshots/' + key + '-' + mode + '.png';
+      });
+    });
+  }
 
   function boot() {
     applyTheme(getStoredTheme());
@@ -235,11 +209,11 @@
     initSmoothAnchors();
     initFaq();
     initBillingToggle();
-    initChart();
     initYear();
     initSystemThemeListener();
+    preloadShots();
 
-    const themeBtn = document.getElementById('theme-toggle');
+    var themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) themeBtn.addEventListener('click', cycleTheme);
   }
 

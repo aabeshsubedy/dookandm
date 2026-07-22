@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="DokaanDM — unified Facebook & Instagram inbox, order capture, COD risk, and CRM for Nepali social commerce sellers. No storefront required."
+      content="DokaanDM — unified Facebook & Instagram inbox, order capture, COD risk, and CRM for Nepali social commerce sellers."
     />
     <meta property="og:title" content="DokaanDM — Sell where your customers already are" />
     <meta
       property="og:description"
-      content="Omnichannel inbox, instant order capture, customer memory, and COD risk signals for Facebook & Instagram sellers."
+      content="Omnichannel inbox, order capture, customer memory, and COD risk signals for Facebook & Instagram sellers."
     />
-    <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,7 +22,6 @@
     <link rel="stylesheet" href="./styles.css" />
     <title>DokaanDM — Inbox, orders & CRM for social sellers</title>
     <script>
-      /* Prevent theme flash before paint */
       (function () {
         try {
           var t = localStorage.getItem('dokaandm-landing-theme') || 'system';
@@ -38,7 +34,6 @@
     </script>
   </head>
   <body>
-    <!-- ═══ Header ═══ -->
     <header class="site-header" id="site-header">
       <div class="container header-inner">
         <a href="#top" class="logo" aria-label="DokaanDM home">
@@ -55,34 +50,32 @@
 
         <nav class="nav-desktop" aria-label="Primary">
           <a href="#features">Features</a>
-          <a href="#how-it-works">How it works</a>
           <a href="#product">Product</a>
+          <a href="#how-it-works">How it works</a>
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
         </nav>
 
         <div class="header-actions">
           <button type="button" class="btn-icon" id="theme-toggle" aria-label="Toggle theme">
-            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="18" height="18" aria-hidden="true">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="18" height="18" hidden>
               <circle cx="12" cy="12" r="4" />
               <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
             </svg>
-            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="18" height="18" aria-hidden="true" hidden>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="18" height="18">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </button>
           <a href="../client/" class="btn btn-ghost btn-md btn-signin">Sign in</a>
           <a href="../client/" class="btn btn-primary btn-md btn-cta">
             Start free
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </a>
           <button type="button" class="btn-icon" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
-            <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20" aria-hidden="true">
+            <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20">
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20" aria-hidden="true" hidden>
+            <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20" hidden>
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -92,8 +85,8 @@
       <div class="mobile-panel" id="mobile-panel">
         <nav aria-label="Mobile">
           <a href="#features">Features</a>
-          <a href="#how-it-works">How it works</a>
           <a href="#product">Product</a>
+          <a href="#how-it-works">How it works</a>
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -105,242 +98,56 @@
     </header>
 
     <main id="top">
-      <!-- ═══ Hero ═══ -->
+      <!-- Hero -->
       <section class="hero">
         <div class="hero-grid" aria-hidden="true"></div>
         <div class="hero-glow" aria-hidden="true"></div>
-
         <div class="container">
           <div class="hero-content">
-            <div class="hero-pill">
-              <span class="hero-pill-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-                </svg>
-              </span>
-              Built for Nepali social commerce
-              <span class="hero-pill-dot" aria-hidden="true"></span>
-              <span class="hero-pill-channels" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="color: #1877f2">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #e1306c">
-                  <rect x="2" y="2" width="20" height="20" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                </svg>
-              </span>
-            </div>
-
+            <p class="hero-eyebrow">Omnichannel commerce for social sellers</p>
             <h1>Sell where your customers <span class="accent">already are</span></h1>
             <p class="hero-lead">
-              DokaanDM is the operations layer for Facebook &amp; Instagram sellers — unified inbox,
-              instant order capture, customer memory, and COD risk signals. No storefront required.
+              Unified inbox, structured order capture, customer history, and COD risk signals —
+              built for sellers who operate in DMs, not on a storefront.
             </p>
-
             <div class="hero-ctas">
-              <a href="../client/" class="btn btn-primary btn-lg" style="box-shadow: 0 4px 14px rgb(37 99 235 / 0.25)">
+              <a href="../client/" class="btn btn-primary btn-lg">
                 Start free
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
               </a>
-              <a href="#product" class="btn btn-secondary btn-lg">See the product</a>
+              <a href="#product" class="btn btn-secondary btn-lg">View product</a>
             </div>
-            <p class="hero-note">Free plan · no card · no transaction fees · upgrade when you grow</p>
+            <div class="hero-trust">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" /></svg>
+                Free to start
+              </span>
+              <span class="dot" aria-hidden="true"></span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" /></svg>
+                No transaction fees
+              </span>
+              <span class="dot" aria-hidden="true"></span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" /></svg>
+                Facebook &amp; Instagram
+              </span>
+            </div>
           </div>
 
-          <!-- Product frame -->
-          <div class="hero-frame-wrap">
-            <div class="hero-frame-glow" aria-hidden="true"></div>
-            <div class="hero-frame">
-              <div class="hero-frame-bar">
-                <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
-                <div class="hero-url">
-                  <span><span class="live-dot"></span> app.dokaandm · workspace</span>
-                </div>
-              </div>
-              <div class="hero-frame-body">
-                <div class="mock-col-left">
-                  <!-- Inbox mock -->
-                  <div class="mock">
-                    <div class="mock-head">
-                      <div class="mock-head-left">
-                        <span class="dot-success"></span>
-                        Inbox
-                        <span class="badge badge-brand">3 unread</span>
-                      </div>
-                      <div class="mock-head-right">
-                        <span class="channel-chip" aria-label="Facebook">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                        </span>
-                        <span class="channel-chip ig" aria-label="Instagram">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="thread is-unread">
-                      <div class="thread-avatar">AK<span class="thread-channel ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg></span></div>
-                      <div class="thread-body">
-                        <div class="thread-top"><span class="thread-name">Anisha K.</span><span class="thread-time">2m</span></div>
-                        <p class="thread-snippet">Yes, black M still available?</p>
-                      </div>
-                      <span class="thread-unread-dot"></span>
-                    </div>
-                    <div class="thread">
-                      <div class="thread-avatar">RT<span class="thread-channel fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span></div>
-                      <div class="thread-body">
-                        <div class="thread-top"><span class="thread-name">Ramesh Thapa</span><span class="thread-time">18m</span></div>
-                        <p class="thread-snippet">Order confirmed — COD Kathmandu</p>
-                        <div class="thread-meta"><span class="badge badge-good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Reliable</span></div>
-                      </div>
-                    </div>
-                    <div class="thread is-unread">
-                      <div class="thread-avatar">SG<span class="thread-channel ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg></span></div>
-                      <div class="thread-body">
-                        <div class="thread-top"><span class="thread-name">Sita Gurung</span><span class="thread-time">1h</span></div>
-                        <p class="thread-snippet">When will the new color drop?</p>
-                      </div>
-                      <span class="thread-unread-dot"></span>
-                    </div>
-                    <div class="thread">
-                      <div class="thread-avatar">BS<span class="thread-channel fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span></div>
-                      <div class="thread-body">
-                        <div class="thread-top"><span class="thread-name">Bikash S.</span><span class="thread-time">3h</span></div>
-                        <p class="thread-snippet">Can I change the address?</p>
-                        <div class="thread-meta"><span class="badge badge-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg> Medium risk</span></div>
-                      </div>
-                    </div>
+          <div class="hero-shot">
+            <div class="shot-stage shot-stage--tilt" data-shot="dashboard">
+              <div class="shot-frame shot-frame--hero">
+                <div class="shot-chrome">
+                  <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                  <div class="shot-url">
+                    <span><span class="live"></span> app.dokaandm · workspace</span>
                   </div>
                 </div>
-                <div class="mock-col-right">
-                  <!-- Dashboard mock -->
-                  <div class="mock">
-                    <div class="mock-head">
-                      <div class="mock-head-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-                        Dashboard
-                      </div>
-                      <div class="mock-head-right">Live · your shop</div>
-                    </div>
-                    <div class="dash-cards">
-                      <div class="dash-card">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg>
-                        <strong>8</strong>
-                        <div class="label">Today's orders</div>
-                        <div class="sub">NPR 18,420</div>
-                      </div>
-                      <div class="dash-card">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        <strong>3</strong>
-                        <div class="label">COD pending</div>
-                        <div class="sub">Need confirm</div>
-                      </div>
-                      <div class="dash-card">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                        <strong>5</strong>
-                        <div class="label">Follow-ups due</div>
-                        <div class="sub">2 overdue</div>
-                      </div>
-                      <div class="dash-card">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-8"/></svg>
-                        <strong>1.2L</strong>
-                        <div class="label">Revenue (mo)</div>
-                        <div class="sub">+14% vs last</div>
-                      </div>
-                    </div>
-                    <div class="dash-chart">
-                      <div class="dash-chart-label">30-day revenue</div>
-                      <div class="chart-bars" id="chart-bars" aria-hidden="true"></div>
-                    </div>
-                  </div>
-                  <div class="mock-row">
-                    <!-- Order pipeline -->
-                    <div class="mock">
-                      <div class="mock-head">
-                        <div class="mock-head-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
-                          Order pipeline
-                        </div>
-                        <span class="badge badge-brand">Today · 8</span>
-                      </div>
-                      <div class="pipeline-grid">
-                        <div class="pipeline-cell"><strong>4</strong><span>Pending</span></div>
-                        <div class="pipeline-cell"><strong>7</strong><span>Confirmed</span></div>
-                        <div class="pipeline-cell"><strong>5</strong><span>Shipped</span></div>
-                        <div class="pipeline-cell"><strong>12</strong><span>Delivered</span></div>
-                      </div>
-                      <div class="order-row">
-                        <div class="order-row-main">
-                          <div class="order-id-row">
-                            <span class="order-id">DKN-000184</span>
-                            <span class="badge badge-neutral">New</span>
-                          </div>
-                          <p class="order-sub">Anisha K. · COD</p>
-                        </div>
-                        <div class="order-right">
-                          <div class="order-total">NPR 2,450</div>
-                          <p class="order-sub">Pending</p>
-                        </div>
-                      </div>
-                      <div class="order-row">
-                        <div class="order-row-main">
-                          <div class="order-id-row">
-                            <span class="order-id">DKN-000183</span>
-                            <span class="badge badge-good">Reliable</span>
-                          </div>
-                          <p class="order-sub">Ramesh T. · COD</p>
-                        </div>
-                        <div class="order-right">
-                          <div class="order-total">NPR 1,890</div>
-                          <p class="order-sub">Confirmed</p>
-                        </div>
-                      </div>
-                      <div class="order-row">
-                        <div class="order-row-main">
-                          <div class="order-id-row">
-                            <span class="order-id">DKN-000182</span>
-                            <span class="badge badge-warn">Medium</span>
-                          </div>
-                          <p class="order-sub">Bikash S. · COD</p>
-                        </div>
-                        <div class="order-right">
-                          <div class="order-total">NPR 3,200</div>
-                          <p class="order-sub">Confirmed</p>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- COD risk -->
-                    <div class="mock">
-                      <div class="mock-head">
-                        <div class="mock-head-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color: rgb(var(--warning))"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>
-                          COD confirmation
-                        </div>
-                      </div>
-                      <div class="risk-body">
-                        <div class="risk-customer">
-                          <div>
-                            <strong>Bikash Sharma</strong>
-                            <span>+977 98× ××× ××41 · Facebook</span>
-                          </div>
-                          <span class="badge badge-warn badge-md">Medium risk</span>
-                        </div>
-                        <div class="risk-metrics">
-                          <div class="risk-metric"><strong>6</strong><span>Delivered</span></div>
-                          <div class="risk-metric"><strong>2</strong><span>Returned</span></div>
-                          <div class="risk-metric"><strong>25%</strong><span>Return rate</span></div>
-                        </div>
-                        <div class="risk-alert">
-                          Higher return rate than your reliable buyers. Confirm phone &amp; address before shipping COD.
-                        </div>
-                        <div class="risk-actions">
-                          <button type="button" class="btn btn-secondary btn-md" tabindex="-1">Cancel</button>
-                          <button type="button" class="btn btn-primary btn-md" tabindex="-1">Confirm COD</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="shot-viewport">
+                  <img class="shot-light" src="./screenshots/dashboard-light.png" alt="DokaanDM dashboard" width="1200" height="900" />
+                  <img class="shot-dark is-hidden" src="./screenshots/dashboard-dark.png" alt="" width="1200" height="900" aria-hidden="true" />
+                  <div class="shot-fade" aria-hidden="true"></div>
                 </div>
               </div>
             </div>
@@ -348,16 +155,16 @@
 
           <div class="stats">
             <div>
-              <div class="stat-value">FB + IG</div>
-              <div class="stat-label">One unified inbox</div>
+              <div class="stat-value">One inbox</div>
+              <div class="stat-label">Facebook &amp; Instagram together</div>
             </div>
             <div>
-              <div class="stat-value">0%</div>
-              <div class="stat-label">Transaction fees</div>
+              <div class="stat-value">Zero fees</div>
+              <div class="stat-label">No cut of your sales</div>
             </div>
             <div>
-              <div class="stat-value">COD</div>
-              <div class="stat-label">Risk before you ship</div>
+              <div class="stat-value">COD risk</div>
+              <div class="stat-label">Flagged before you ship</div>
             </div>
             <div>
               <div class="stat-value">NPR 899</div>
@@ -367,38 +174,7 @@
         </div>
       </section>
 
-      <!-- ═══ Problem ═══ -->
-      <section class="section section-surface" id="problem">
-        <div class="container">
-          <div class="section-head">
-            <p class="eyebrow">The problem</p>
-            <h2 class="section-title">Social sellers run a real business inside DMs</h2>
-            <p class="section-lead">
-              Storefront-first tools push you onto a website. Your customers are already messaging you.
-              DokaanDM meets them — and you — there.
-            </p>
-          </div>
-          <div class="pain-grid">
-            <article class="pain-card">
-              <span class="pain-num">01</span>
-              <h3>DMs everywhere, memory nowhere</h3>
-              <p>Messenger, Instagram, and comments in separate tabs. Who ordered what lives in scrollback.</p>
-            </article>
-            <article class="pain-card">
-              <span class="pain-num">02</span>
-              <h3>Orders only in your head</h3>
-              <p>15–20 active custom orders tracked by memory. No status, no totals, no paper trail.</p>
-            </article>
-            <article class="pain-card">
-              <span class="pain-num">03</span>
-              <h3>COD returns bleed cash</h3>
-              <p>Return-to-origin can hit ~30% in similar markets — shipping both ways, zero revenue.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Features ═══ -->
+      <!-- Features -->
       <section class="section" id="features">
         <div class="container">
           <div class="section-head">
@@ -415,11 +191,6 @@
               </div>
               <h3>Unified inbox</h3>
               <p>Facebook and Instagram threads in one workspace. Search, filters, unread state, and native replies.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Meta OAuth + webhooks</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Channel badges &amp; filters</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Optimistic send + retry</li>
-              </ul>
             </article>
             <article class="feature-card">
               <div class="feature-icon" aria-hidden="true">
@@ -427,47 +198,27 @@
               </div>
               <h3>Order capture</h3>
               <p>Turn any conversation into a tracked order in seconds — line items, phone, address, payment type.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Prefilled from chat</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> DKN sequential numbers</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Status pipeline</li>
-              </ul>
             </article>
             <article class="feature-card">
               <div class="feature-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.29 7 12 12l8.71-5M12 22V12"/></svg>
               </div>
               <h3>Product catalog</h3>
               <p>Searchable catalog with optional inventory. Link products to orders; name and price snapshot.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> SKU + name search</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Stock tracking</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> CSV export on paid</li>
-              </ul>
             </article>
             <article class="feature-card">
               <div class="feature-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
               <h3>Customer CRM</h3>
-              <p>Phone-keyed identity across channels. Notes, tags, lifetime value, and follow-up reminders.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> No duplicate profiles</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> VIP / risky tags</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Due reminders</li>
-              </ul>
+              <p>Phone-keyed identity across channels. Notes, tags, total spent, and follow-up reminders.</p>
             </article>
             <article class="feature-card">
               <div class="feature-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
               </div>
               <h3>COD risk signals</h3>
-              <p>Rule-based risk from your own history — new, reliable, medium, or risky — before you confirm COD.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Deterministic scoring</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Shown at confirm</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> No ML black box</li>
-              </ul>
+              <p>Rule-based risk from your own history — transparent numbers before you confirm COD.</p>
             </article>
             <article class="feature-card">
               <div class="feature-icon" aria-hidden="true">
@@ -475,23 +226,169 @@
               </div>
               <h3>Business dashboard</h3>
               <p>Today's orders, pending COD, follow-ups due, monthly revenue, and a 30-day chart.</p>
-              <ul class="feature-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Pipeline counts</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Revenue trends</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Overdue follow-ups</li>
-              </ul>
             </article>
           </div>
         </div>
       </section>
 
-      <!-- ═══ How it works ═══ -->
-      <section class="section section-surface" id="how-it-works">
+      <!-- Product tour -->
+      <section class="section section-surface" id="product">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Product tour</p>
+            <h2 class="section-title">The real product — not a mockup</h2>
+            <p class="section-lead">
+              Live workspace screenshots. Toggle light or dark in the header — the product previews follow your theme.
+            </p>
+          </div>
+
+          <div class="product-blocks">
+            <div class="product-block">
+              <div class="product-copy">
+                <p class="eyebrow">Unified inbox</p>
+                <h3>Reply to Facebook &amp; Instagram in one place</h3>
+                <p>
+                  Threads arrive via Meta webhooks, normalize to one schema, and render the same way.
+                  Filter by channel, unread, or has-order — then capture an order without leaving the chat.
+                </p>
+                <ul class="product-bullets">
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> OAuth connect for Pages &amp; IG business</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Unread state, search, and keyboard shortcuts</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Customer context and COD risk beside the thread</li>
+                </ul>
+              </div>
+              <div class="shot-stage shot-stage--tilt" data-shot="inbox">
+                <div class="shot-frame">
+                  <div class="shot-chrome">
+                    <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="shot-url"><span><span class="live"></span> app.dokaandm · workspace</span></div>
+                  </div>
+                  <div class="shot-viewport">
+                    <img class="shot-light" src="./screenshots/inbox-light.png" alt="DokaanDM unified inbox" loading="lazy" />
+                    <img class="shot-dark is-hidden" src="./screenshots/inbox-dark.png" alt="" loading="lazy" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-block is-reverse">
+              <div class="product-copy">
+                <p class="eyebrow">Order pipeline</p>
+                <h3>From chat to kanban without retyping</h3>
+                <p>
+                  Sequential DKN order numbers, payment type, and status pipeline. Drag cards between stages —
+                  COD confirmation surfaces risk before you ship.
+                </p>
+                <ul class="product-bullets">
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> pending → confirmed → shipped → delivered</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Board and list views on paid plans</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Cash-on-delivery risk gate at confirm</li>
+                </ul>
+              </div>
+              <div class="shot-stage shot-stage--tilt" data-shot="orders">
+                <div class="shot-frame">
+                  <div class="shot-chrome">
+                    <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="shot-url"><span><span class="live"></span> app.dokaandm · workspace</span></div>
+                  </div>
+                  <div class="shot-viewport">
+                    <img class="shot-light" src="./screenshots/orders-light.png" alt="DokaanDM orders board" loading="lazy" />
+                    <img class="shot-dark is-hidden" src="./screenshots/orders-dark.png" alt="" loading="lazy" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-block">
+              <div class="product-copy">
+                <p class="eyebrow">Dashboard</p>
+                <h3>See the day at a glance</h3>
+                <p>
+                  Revenue trends, pipeline health, follow-ups, and plan usage — scoped only to your shop.
+                  Built for solo sellers who need signal, not noise.
+                </p>
+                <ul class="product-bullets">
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Today's orders and month revenue</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> COD queue and overdue follow-ups</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Fulfillment and return rates</li>
+                </ul>
+              </div>
+              <div class="shot-stage shot-stage--tilt" data-shot="dashboard">
+                <div class="shot-frame">
+                  <div class="shot-chrome">
+                    <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="shot-url"><span><span class="live"></span> app.dokaandm · workspace</span></div>
+                  </div>
+                  <div class="shot-viewport">
+                    <img class="shot-light" src="./screenshots/dashboard-light.png" alt="DokaanDM dashboard" loading="lazy" />
+                    <img class="shot-dark is-hidden" src="./screenshots/dashboard-dark.png" alt="" loading="lazy" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-block is-reverse">
+              <div class="product-copy">
+                <p class="eyebrow">CRM</p>
+                <h3>Remember every buyer across channels</h3>
+                <p>
+                  Phone identity means one profile for Facebook and Instagram. See order history, total spent,
+                  tags, and risk — then set a reminder when stock returns.
+                </p>
+                <ul class="product-bullets">
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> No duplicate profiles when phone appears</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Notes, tags, and follow-up reminders</li>
+                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> COD risk from your own history</li>
+                </ul>
+              </div>
+              <div class="shot-stage shot-stage--tilt" data-shot="customers">
+                <div class="shot-frame">
+                  <div class="shot-chrome">
+                    <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="shot-url"><span><span class="live"></span> app.dokaandm · workspace</span></div>
+                  </div>
+                  <div class="shot-viewport">
+                    <img class="shot-light" src="./screenshots/customers-light.png" alt="DokaanDM customers" loading="lazy" />
+                    <img class="shot-dark is-hidden" src="./screenshots/customers-dark.png" alt="" loading="lazy" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="catalog-strip">
+            <div class="section-head">
+              <p class="eyebrow">Catalog</p>
+              <h3 class="section-title" style="font-size: 1.25rem">Products ready for order capture</h3>
+              <p class="section-lead" style="font-size: 0.875rem">
+                Build once, attach to any conversation. Inventory and pricing stay in sync.
+              </p>
+            </div>
+            <div class="catalog-shot">
+              <div class="shot-stage" data-shot="products">
+                <div class="shot-frame">
+                  <div class="shot-chrome">
+                    <div class="shot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    <div class="shot-url"><span><span class="live"></span> app.dokaandm · workspace</span></div>
+                  </div>
+                  <div class="shot-viewport">
+                    <img class="shot-light" src="./screenshots/products-light.png" alt="DokaanDM products" loading="lazy" />
+                    <img class="shot-dark is-hidden" src="./screenshots/products-dark.png" alt="" loading="lazy" aria-hidden="true" />
+                    <div class="shot-fade" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="section" id="how-it-works">
         <div class="container">
           <div class="section-head">
             <p class="eyebrow">How it works</p>
             <h2 class="section-title">Live in minutes, not weeks</h2>
-            <p class="section-lead">Connect channels, capture orders from chat, and stop guessing on COD.</p>
           </div>
           <div class="steps">
             <div class="step">
@@ -499,15 +396,15 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
               <p class="step-num">01</p>
-              <h3>Connect your channels</h3>
-              <p>Link Facebook Pages and Instagram business accounts with secure Meta OAuth. Messages land via webhooks.</p>
+              <h3>Connect channels</h3>
+              <p>Link Facebook Pages and Instagram business accounts with Meta OAuth. Messages land via webhooks.</p>
             </div>
             <div class="step">
               <div class="step-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg>
               </div>
               <p class="step-num">02</p>
-              <h3>Reply &amp; capture orders</h3>
+              <h3>Reply &amp; capture</h3>
               <p>Answer in one inbox. Create an order from any thread — phone resolves the customer automatically.</p>
             </div>
             <div class="step">
@@ -516,282 +413,22 @@
               </div>
               <p class="step-num">03</p>
               <h3>Ship smarter</h3>
-              <p>Run the pipeline, watch COD risk, set reminders, and grow with a catalog and dashboard that scale with you.</p>
+              <p>Run the pipeline, check COD risk, set reminders, and grow with catalog and dashboard.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ Product tour ═══ -->
-      <section class="section" id="product">
-        <div class="container">
-          <div class="section-head">
-            <p class="eyebrow">Product tour</p>
-            <h2 class="section-title">Built around how sellers actually work</h2>
-            <p class="section-lead">
-              Capture beats configuration. Memory is the moat. Every surface is multi-tenant safe.
-            </p>
-          </div>
-
-          <div class="product-blocks">
-            <div class="product-block">
-              <div class="product-copy">
-                <span class="eyebrow">Unified inbox</span>
-                <h3>One workspace for Facebook &amp; Instagram</h3>
-                <p>
-                  Threads arrive via Meta webhooks, normalize to one schema, and render the same way.
-                  Filter by channel, unread, or has-order. Reply natively — no app-hopping.
-                </p>
-                <ul class="product-bullets">
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> OAuth 2.0 connect for Pages &amp; IG business</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Unread state, search, keyboard-friendly flows</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Outbound queue respects Meta rate limits</li>
-                </ul>
-              </div>
-              <div class="landing-float">
-                <div class="mock">
-                  <div class="mock-head">
-                    <div class="mock-head-left"><span class="dot-success"></span> Inbox <span class="badge badge-brand">3 unread</span></div>
-                    <div class="mock-head-right">
-                      <span class="channel-chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span>
-                      <span class="channel-chip ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg></span>
-                    </div>
-                  </div>
-                  <div class="thread is-unread">
-                    <div class="thread-avatar">AK<span class="thread-channel ig"></span></div>
-                    <div class="thread-body">
-                      <div class="thread-top"><span class="thread-name">Anisha K.</span><span class="thread-time">2m</span></div>
-                      <p class="thread-snippet">Yes, black M still available?</p>
-                    </div>
-                    <span class="thread-unread-dot"></span>
-                  </div>
-                  <div class="thread">
-                    <div class="thread-avatar">RT<span class="thread-channel fb"></span></div>
-                    <div class="thread-body">
-                      <div class="thread-top"><span class="thread-name">Ramesh Thapa</span><span class="thread-time">18m</span></div>
-                      <p class="thread-snippet">Order confirmed — COD Kathmandu</p>
-                      <div class="thread-meta"><span class="badge badge-good">Reliable</span></div>
-                    </div>
-                  </div>
-                  <div class="thread is-unread">
-                    <div class="thread-avatar">SG<span class="thread-channel ig"></span></div>
-                    <div class="thread-body">
-                      <div class="thread-top"><span class="thread-name">Sita Gurung</span><span class="thread-time">1h</span></div>
-                      <p class="thread-snippet">When will the new color drop?</p>
-                    </div>
-                    <span class="thread-unread-dot"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-block is-reverse">
-              <div class="product-copy">
-                <span class="eyebrow">Order capture</span>
-                <h3>From chat to pipeline in seconds</h3>
-                <p>
-                  Create order from any conversation. Line items, phone, address, payment type.
-                  Sequential DKN numbers, totals auto-computed, status pipeline with audit trail.
-                </p>
-                <ul class="product-bullets">
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> pending → confirmed → shipped → delivered</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Link catalog products; inventory decrements</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Kanban board on paid plans</li>
-                </ul>
-              </div>
-              <div class="landing-float">
-                <div class="mock">
-                  <div class="mock-head">
-                    <div class="mock-head-left">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
-                      Order pipeline
-                    </div>
-                    <span class="badge badge-brand">Today · 8</span>
-                  </div>
-                  <div class="pipeline-grid">
-                    <div class="pipeline-cell"><strong>4</strong><span>Pending</span></div>
-                    <div class="pipeline-cell"><strong>7</strong><span>Confirmed</span></div>
-                    <div class="pipeline-cell"><strong>5</strong><span>Shipped</span></div>
-                    <div class="pipeline-cell"><strong>12</strong><span>Delivered</span></div>
-                  </div>
-                  <div class="order-row">
-                    <div class="order-row-main">
-                      <div class="order-id-row"><span class="order-id">DKN-000184</span><span class="badge badge-neutral">New</span></div>
-                      <p class="order-sub">Anisha K. · COD</p>
-                    </div>
-                    <div class="order-right"><div class="order-total">NPR 2,450</div><p class="order-sub">Pending</p></div>
-                  </div>
-                  <div class="order-row">
-                    <div class="order-row-main">
-                      <div class="order-id-row"><span class="order-id">DKN-000183</span><span class="badge badge-good">Reliable</span></div>
-                      <p class="order-sub">Ramesh T. · COD</p>
-                    </div>
-                    <div class="order-right"><div class="order-total">NPR 1,890</div><p class="order-sub">Confirmed</p></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-block">
-              <div class="product-copy">
-                <span class="eyebrow">COD risk</span>
-                <h3>Know who is risky before you ship</h3>
-                <p>
-                  Your #1 differentiator. Transparent, rule-based scores from your own history —
-                  always shown with the underlying delivered/returned counts.
-                </p>
-                <ul class="product-bullets">
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Labels: new · reliable · medium · risky</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Surfaced on profile and at COD confirm</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Unit-tested pure logic — no black box</li>
-                </ul>
-              </div>
-              <div class="landing-float">
-                <div class="mock">
-                  <div class="mock-head">
-                    <div class="mock-head-left">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color: rgb(var(--warning))"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>
-                      COD confirmation
-                    </div>
-                  </div>
-                  <div class="risk-body">
-                    <div class="risk-customer">
-                      <div><strong>Bikash Sharma</strong><span>+977 98× ××× ××41 · Facebook</span></div>
-                      <span class="badge badge-warn badge-md">Medium risk</span>
-                    </div>
-                    <div class="risk-metrics">
-                      <div class="risk-metric"><strong>6</strong><span>Delivered</span></div>
-                      <div class="risk-metric"><strong>2</strong><span>Returned</span></div>
-                      <div class="risk-metric"><strong>25%</strong><span>Return rate</span></div>
-                    </div>
-                    <div class="risk-alert">Higher return rate than your reliable buyers. Confirm phone &amp; address before shipping COD.</div>
-                    <div class="risk-actions">
-                      <button type="button" class="btn btn-secondary btn-md" tabindex="-1">Cancel</button>
-                      <button type="button" class="btn btn-primary btn-md" tabindex="-1">Confirm COD</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-block is-reverse">
-              <div class="product-copy">
-                <span class="eyebrow">CRM &amp; catalog</span>
-                <h3>Remember the relationship</h3>
-                <p>
-                  Phone identity across channels means one customer profile — order history, total spent, notes,
-                  tags, and date-based reminders that surface on the dashboard.
-                </p>
-                <ul class="product-bullets">
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Provisional profiles promote when phone appears</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Product catalog with SKU search &amp; stock</li>
-                  <li><span class="bullet-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span> Reminders for restocks and follow-ups</li>
-                </ul>
-              </div>
-              <div class="landing-float">
-                <div class="mock">
-                  <div class="mock-head">
-                    <div class="mock-head-left">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                      Customer · Anisha Karki
-                    </div>
-                  </div>
-                  <div class="customer-body">
-                    <div class="customer-tags">
-                      <span class="badge badge-brand">VIP</span>
-                      <span class="badge badge-good">Reliable</span>
-                      <span class="badge badge-neutral">+977 98× ××× ××07</span>
-                    </div>
-                    <div class="customer-metrics">
-                      <div><strong>11</strong><span>Orders</span></div>
-                      <div><strong>NPR 42k</strong><span>Total spent</span></div>
-                      <div><strong>0</strong><span>Returns</span></div>
-                    </div>
-                    <div class="customer-note"><strong>Note · </strong>Prefers black sizes M. Follow up when restock hits.</div>
-                    <div class="customer-reminder">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                      Reminder · Restock alert · due Fri
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Comparison ═══ -->
-      <section class="section section-surface" id="compare">
-        <div class="container" style="max-width: 56rem">
-          <div class="section-head">
-            <p class="eyebrow">Positioning</p>
-            <h2 class="section-title">Not another storefront</h2>
-            <p class="section-lead">
-              Competitors push branded websites. DokaanDM layers onto DMs — structurally cheaper to run,
-              priced meaningfully under the ~NPR 2,499 market anchor.
-            </p>
-          </div>
-          <div class="compare-wrap">
-            <div class="compare-head">
-              <span>Capability</span>
-              <span class="compare-col col-brand">DokaanDM</span>
-              <span class="compare-col">Storefront tools</span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Works inside FB &amp; IG DMs</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Unified omnichannel inbox</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-partial">Partial</span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Order capture from chat</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">COD risk from your history</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Lightweight CRM &amp; reminders</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-partial">Partial</span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Requires a separate storefront</span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Transaction / service fees</span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-            </div>
-            <div class="compare-row">
-              <span class="feature-name">Priced under market anchor</span>
-              <span class="compare-col"><span class="cell-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></span></span>
-              <span class="compare-col"><span class="cell-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></span></span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Pricing ═══ -->
-      <section class="section" id="pricing">
+      <!-- Pricing -->
+      <section class="section section-surface" id="pricing">
         <div class="container">
           <div class="section-head">
             <p class="eyebrow">Pricing</p>
             <h2 class="section-title">Simple plans. Zero transaction fees.</h2>
             <p class="section-lead">
-              Paid tiers share the full product — you scale on limits, not feature gates. Annual saves 2 months.
+              Paid tiers share the full product — you scale on limits. Annual saves 2 months.
             </p>
           </div>
-
           <div class="billing-toggle">
             <div class="toggle" role="group" aria-label="Billing period">
               <button type="button" id="billing-monthly" class="is-active" data-billing="monthly">Monthly</button>
@@ -800,9 +437,7 @@
               </button>
             </div>
           </div>
-
-          <div class="pricing-grid" id="pricing-grid">
-            <!-- Free -->
+          <div class="pricing-grid">
             <div class="price-card" data-plan="free">
               <p class="plan-name">Free</p>
               <p class="price-main">Free</p>
@@ -812,16 +447,10 @@
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 40 orders / month</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 25 customers</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 25 products</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 1 team login</li>
-                <li class="is-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg><span>COD risk flagging</span></li>
-                <li class="is-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg><span>Business dashboard</span></li>
-                <li class="is-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg><span>CRM notes, tags &amp; reminders</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Community support, 48–72h</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Community support</li>
               </ul>
               <a href="../client/" class="btn btn-secondary btn-lg btn-block">Start free</a>
             </div>
-
-            <!-- Starter -->
             <div class="price-card is-popular" data-plan="starter">
               <span class="popular-badge">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -833,18 +462,12 @@
               <ul class="price-features">
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 2 channels (FB + IG)</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 300 orders / month</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 500 customers</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 300 products</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 1 team login</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 500 customers · 300 products</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> COD risk flagging</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Business dashboard</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> CRM, kanban &amp; CSV export</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Email support, 24–48h</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Dashboard, CRM, kanban</li>
               </ul>
               <a href="../client/" class="btn btn-primary btn-lg btn-block">Get started</a>
             </div>
-
-            <!-- Growth -->
             <div class="price-card" data-plan="growth">
               <p class="plan-name">Growth</p>
               <p class="price-main" data-price-monthly="NPR 1,799" data-price-annual="NPR 1,499">NPR 1,799</p>
@@ -853,24 +476,18 @@
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Up to 3 channels</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 1,500 orders / month</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited customers</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> 2,000 products</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Up to 3 team logins</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Full product features</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Priority support, same-day</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Priority support</li>
               </ul>
               <a href="../client/" class="btn btn-secondary btn-lg btn-block">Get started</a>
             </div>
-
-            <!-- Business -->
             <div class="price-card" data-plan="business">
               <p class="plan-name">Business</p>
               <p class="price-main">Custom</p>
               <p class="price-sub">Tailored limits</p>
               <ul class="price-features">
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited channels</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited orders</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited customers</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited products</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited orders &amp; products</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Unlimited team logins</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Full product features</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Dedicated support</li>
@@ -878,15 +495,12 @@
               <a href="mailto:support@dokaandm.app?subject=Business%20plan" class="btn btn-secondary btn-lg btn-block">Contact us</a>
             </div>
           </div>
-
-          <p class="pricing-note">
-            Market anchor ~NPR 2,499/mo. Starter is ~64% cheaper. No payment processing fees — ever.
-          </p>
+          <p class="pricing-note">Market anchor ~NPR 2,499/mo. Starter is ~64% cheaper. No payment processing fees.</p>
         </div>
       </section>
 
-      <!-- ═══ Social proof ═══ -->
-      <section class="section section-surface">
+      <!-- Social proof -->
+      <section class="section">
         <div class="container">
           <div class="proof-grid">
             <div class="quote-card">
@@ -917,7 +531,7 @@
                 <p>Every COD badge shows the real numbers — not a mystery score.</p>
               </div>
               <div class="proof-card">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-8"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                 <h3>Day-one dashboard</h3>
                 <p>Orders, COD pending, follow-ups, and revenue — scoped only to your shop.</p>
               </div>
@@ -926,8 +540,8 @@
         </div>
       </section>
 
-      <!-- ═══ FAQ ═══ -->
-      <section class="section" id="faq">
+      <!-- FAQ -->
+      <section class="section section-surface" id="faq">
         <div class="container" style="max-width: 48rem">
           <div class="section-head">
             <p class="eyebrow">FAQ</p>
@@ -937,7 +551,7 @@
             <div class="faq-item is-open">
               <button type="button" class="faq-trigger" aria-expanded="true">
                 Do I need a website or online store?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="faq-panel">
                 No. DokaanDM layers onto the Facebook and Instagram presence you already use. There is no storefront to host or maintain.
@@ -946,16 +560,16 @@
             <div class="faq-item">
               <button type="button" class="faq-trigger" aria-expanded="false">
                 How does COD risk work?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="faq-panel">
-                We score each customer from your own delivered and returned orders — transparent rules, not machine learning. Labels: new, reliable, medium, or risky — always with the numbers behind them.
+                We score each customer from your own delivered and returned orders — transparent rules, not machine learning. Labels show with the numbers behind them.
               </div>
             </div>
             <div class="faq-item">
               <button type="button" class="faq-trigger" aria-expanded="false">
                 Is Facebook and Instagram really unified?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="faq-panel">
                 Yes on paid plans. Threads normalize to one schema so you reply from a single inbox. Free includes one channel (FB or IG) to try the workflow.
@@ -964,7 +578,7 @@
             <div class="faq-item">
               <button type="button" class="faq-trigger" aria-expanded="false">
                 Are there payment or transaction fees?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="faq-panel">
                 No. DokaanDM is a clean subscription. Payment type and reference are logged on orders; we do not process payments or take a cut.
@@ -973,47 +587,34 @@
             <div class="faq-item">
               <button type="button" class="faq-trigger" aria-expanded="false">
                 Can I start free?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="faq-panel">
-                Yes. Free includes one channel, 40 orders/month, and 25 products/customers — enough to validate the workflow. Upgrade when you need FB+IG together, COD risk, CRM, and the dashboard.
-              </div>
-            </div>
-            <div class="faq-item">
-              <button type="button" class="faq-trigger" aria-expanded="false">
-                Who is this built for?
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              <div class="faq-panel">
-                Nepali social-commerce sellers running real volume in DMs — solo shops first, then growing teams with helpers and multiple pages.
+                Yes. Free includes one channel, 40 orders/month, and 25 products/customers. Upgrade when you need FB+IG together, COD risk, CRM, and the dashboard.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ═══ Final CTA ═══ -->
+      <!-- Final CTA -->
       <section class="final-cta">
         <div class="final-cta-bg" aria-hidden="true"></div>
         <div class="final-cta-shine" aria-hidden="true"></div>
         <div class="container final-cta-inner">
           <h2>Ready to run your DM business like a system?</h2>
-          <p>
-            Start free. Connect a channel. Capture your first order from a conversation.
-            Upgrade when you need FB + IG together and COD risk.
-          </p>
+          <p>Start free. Connect a channel. Capture your first order from a conversation.</p>
           <div class="final-cta-actions">
-            <a href="../client/" class="btn btn-white btn-xl">
+            <a href="../client/" class="btn btn-white btn-lg">
               Create free account
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
-            <a href="../client/" class="btn btn-outline-white btn-xl">Sign in</a>
+            <a href="../client/" class="btn btn-outline-white btn-lg">Sign in</a>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- ═══ Footer ═══ -->
     <footer class="site-footer">
       <div class="container">
         <div class="footer-grid">
@@ -1037,8 +638,8 @@
             <h4>Product</h4>
             <ul>
               <li><a href="#features">Features</a></li>
-              <li><a href="#how-it-works">How it works</a></li>
               <li><a href="#product">Product</a></li>
+              <li><a href="#how-it-works">How it works</a></li>
               <li><a href="#pricing">Pricing</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>

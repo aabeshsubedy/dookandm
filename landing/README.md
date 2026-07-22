@@ -1,37 +1,43 @@
-# DokaanDM Landing (static)
+# DokaanDM Landing (static HTML / CSS / JS)
 
-Production marketing page in **pure HTML, CSS, and vanilla JavaScript** — no build step, no React.
+Standalone marketing site — **no React, no build step**.
 
-## Preview
-
-From the repo root:
+## Open it
 
 ```bash
-# any static server, e.g.
-npx serve landing
-# or
+# Option A: open the file directly
+open landing/index.html
+
+# Option B: local server (recommended)
 cd landing && python3 -m http.server 8080
+# → http://localhost:8080
 ```
-
-Then open `http://localhost:3000` (or `8080`).
-
-You can also open `landing/index.html` directly in a browser (theme + interactions still work).
 
 ## Files
 
-| File | Role |
-|------|------|
-| `index.html` | Full page structure, product mocks, pricing, FAQ |
-| `styles.css` | Design system (Ocean blue tokens, light/dark, layout) |
-| `script.js` | Theme toggle, mobile nav, FAQ, billing toggle, chart |
-| `favicon.svg` | Brand favicon |
+| File | Purpose |
+|------|---------|
+| `index.html` | Full page structure |
+| `styles.css` | Design system + layout |
+| `script.js` | Theme toggle, mobile nav, FAQ, pricing, screenshot theme swap |
+| `screenshots/*-light.png` / `*-dark.png` | Real app screenshots (no sidebar) |
+| `favicon.svg` | Favicon |
 
-## Design
+## Theme
 
-- Default accent: **Ocean blue** (`#2563EB` / RGB `37 99 235`)
-- Light / dark via `html.dark` + `localStorage` key `dokaandm-landing-theme`
-- Mirrors product docs: inbox, orders, COD risk, CRM, catalog, dashboard, plans
+Light / dark toggle is in the header. Product screenshots switch with the theme (`*-light.png` / `*-dark.png`).
+
+Preference is stored in `localStorage` as `dokaandm-landing-theme`.
 
 ## CTAs
 
-Sign-in / start-free links point at `../client/` (the React app). Adjust hrefs if you deploy the landing and app on separate hosts.
+Sign-in / Start free link to `../client/` (the React app). Change those `href`s for production hosting.
+
+## Refresh screenshots
+
+From the monorepo root (app running, demo seeded):
+
+```bash
+BASE_URL=http://localhost:5175 node scripts/capture-screenshots.mjs
+# then copy client/public/screenshots/*-{light,dark}.png → landing/screenshots/
+```
