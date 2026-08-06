@@ -13,6 +13,8 @@
       content="Omnichannel inbox, order capture, customer memory, and COD risk signals for Facebook & Instagram sellers."
     />
     <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#08090c" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,6 +23,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="preload" as="image" href="./screenshots/dashboard-light.png" />
     <title>DokaanDM — Inbox, orders & CRM for social sellers</title>
     
     <!-- JSON-LD Structured Data -->
@@ -53,6 +56,7 @@
     </script>
   </head>
   <body>
+    <a href="#top" class="skip-link">Skip to content</a>
     <header class="site-header" id="site-header">
       <div class="container header-inner">
         <a href="#top" class="logo" aria-label="DokaanDM home">
@@ -125,7 +129,10 @@
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="container">
           <div class="hero-content reveal">
-            <p class="hero-eyebrow">Omnichannel commerce for social sellers</p>
+            <p class="hero-eyebrow">
+              <span class="pip" aria-hidden="true"></span>
+              Omnichannel commerce for social sellers
+            </p>
             <h1>Sell where your customers <span class="accent">already are</span></h1>
             <p class="hero-lead">
               Unified inbox, structured order capture, customer history, and COD risk signals —
@@ -216,6 +223,7 @@
               </div>
               <h3>Unified inbox</h3>
               <p>Facebook and Instagram threads in one workspace. Search, filters, unread state, and native replies.</p>
+              <span class="feature-tag">Meta webhooks · real time</span>
             </article>
             <article class="feature-card reveal reveal-delay-2">
               <div class="feature-icon" aria-hidden="true">
@@ -223,6 +231,7 @@
               </div>
               <h3>Order capture</h3>
               <p>Turn any conversation into a tracked order in seconds — line items, phone, address, payment type.</p>
+              <span class="feature-tag">Prefilled from the thread</span>
             </article>
             <article class="feature-card reveal reveal-delay-3">
               <div class="feature-icon" aria-hidden="true">
@@ -230,6 +239,7 @@
               </div>
               <h3>Product catalog</h3>
               <p>Searchable catalog with optional inventory. Link products to orders; name and price snapshot.</p>
+              <span class="feature-tag">Price snapshot on order</span>
             </article>
             <article class="feature-card reveal reveal-delay-1">
               <div class="feature-icon" aria-hidden="true">
@@ -237,6 +247,7 @@
               </div>
               <h3>Customer CRM</h3>
               <p>Phone-keyed identity across channels. Notes, tags, total spent, and follow-up reminders.</p>
+              <span class="feature-tag">One profile · FB + IG</span>
             </article>
             <article class="feature-card reveal reveal-delay-2">
               <div class="feature-icon" aria-hidden="true">
@@ -244,6 +255,7 @@
               </div>
               <h3>COD risk signals</h3>
               <p>Rule-based risk from your own history — transparent numbers before you confirm COD.</p>
+              <span class="feature-tag">4 tiers · no black box</span>
             </article>
             <article class="feature-card reveal reveal-delay-3">
               <div class="feature-icon" aria-hidden="true">
@@ -251,6 +263,7 @@
               </div>
               <h3>Business dashboard</h3>
               <p>Today's orders, pending COD, follow-ups due, monthly revenue, and a 30-day chart.</p>
+              <span class="feature-tag">Scoped to your shop only</span>
             </article>
           </div>
         </div>
@@ -258,7 +271,7 @@
 
       <!-- Product tour -->
       <section class="section section-surface" id="product">
-        <div class="container">
+        <div class="container product-head">
           <div class="section-head reveal">
             <p class="eyebrow">Product tour</p>
             <h2 class="section-title">The real product — not a mockup</h2>
@@ -561,26 +574,32 @@
           </div>
           <div class="steps">
             <div class="step reveal reveal-delay-1">
-              <div class="step-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <div class="step-head">
+                <div class="step-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <p class="step-num" aria-hidden="true">01</p>
               </div>
-              <p class="step-num">01</p>
               <h3>Connect channels</h3>
               <p>Link Facebook Pages and Instagram business accounts with Meta OAuth. Messages land via webhooks.</p>
             </div>
             <div class="step reveal reveal-delay-2">
-              <div class="step-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg>
+              <div class="step-head">
+                <div class="step-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg>
+                </div>
+                <p class="step-num" aria-hidden="true">02</p>
               </div>
-              <p class="step-num">02</p>
               <h3>Reply &amp; capture</h3>
               <p>Answer in one inbox. Create an order from any thread — phone resolves the customer automatically.</p>
             </div>
             <div class="step reveal reveal-delay-3">
-              <div class="step-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              <div class="step-head">
+                <div class="step-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                </div>
+                <p class="step-num" aria-hidden="true">03</p>
               </div>
-              <p class="step-num">03</p>
               <h3>Ship smarter</h3>
               <p>Run the pipeline, check COD risk, set reminders, and grow with catalog and dashboard.</p>
             </div>
@@ -641,6 +660,21 @@
                     <span>30%</span>
                   </div>
                 </div>
+
+                <div class="calc-summary">
+                  <div>
+                    <span class="calc-summary-label">Monthly GMV through DMs</span>
+                    <span class="calc-summary-val" id="calc-gmv">NPR 270,000</span>
+                  </div>
+                  <div>
+                    <span class="calc-summary-label">Returns at today's rate</span>
+                    <span class="calc-summary-val" id="calc-returns">18 orders</span>
+                  </div>
+                  <div>
+                    <span class="calc-summary-label">Flagged before dispatch</span>
+                    <span class="calc-summary-val is-brand" id="calc-flagged">14 orders</span>
+                  </div>
+                </div>
               </div>
 
               <div class="calc-result-box">
@@ -653,11 +687,15 @@
                   Prevents ~<strong id="calc-prevented-orders">14</strong> failed courier attempts and saves NPR <span id="calc-shipping-cost">2,520</span> in wasted 2-way shipping costs every month.
                 </p>
                 <div class="result-cta">
-                  <a href="../client/" class="btn btn-primary btn-lg btn-block">
-                    Start Saving Now
+                  <a href="../client/" class="btn btn-white btn-lg btn-block">
+                    Start saving now
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                   </a>
                 </div>
+                <p class="result-note">
+                  Estimate only. Assumes ~75% of risky COD orders are caught before dispatch and NPR 180 in
+                  two-way courier cost per failed attempt.
+                </p>
               </div>
             </div>
           </div>
@@ -745,8 +783,16 @@
       </section>
 
       <!-- Social proof -->
-      <section class="section">
+      <section class="section" id="why">
         <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Why sellers switch</p>
+            <h2 class="section-title">Built around how DM selling actually works</h2>
+            <p class="section-lead">
+              No storefront to maintain, no percentage of your sales — just the operations layer on top of
+              the channels you already run.
+            </p>
+          </div>
           <div class="proof-grid">
             <div class="quote-card reveal">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -756,6 +802,20 @@
                 “I used to lose orders in Messenger scrollback. Now every DM can become a tracked order —
                 and I finally see who keeps returning COD before I ship.”
               </blockquote>
+              <div class="quote-metrics">
+                <div class="quote-metric">
+                  <strong>2</strong>
+                  <span>channels, one thread list</span>
+                </div>
+                <div class="quote-metric">
+                  <strong>0%</strong>
+                  <span>cut of every sale</span>
+                </div>
+                <div class="quote-metric">
+                  <strong>4</strong>
+                  <span>COD risk tiers explained</span>
+                </div>
+              </div>
               <div class="quote-author">
                 <div class="quote-avatar">PK</div>
                 <div>
@@ -787,58 +847,86 @@
 
       <!-- FAQ -->
       <section class="section section-surface" id="faq">
-        <div class="container" style="max-width: 48rem">
+        <div class="container" style="max-width: 52rem">
           <div class="section-head reveal">
             <p class="eyebrow">FAQ</p>
             <h2 class="section-title">Questions, answered</h2>
           </div>
           <div class="faq-list reveal" id="faq-list">
             <div class="faq-item is-open">
-              <button type="button" class="faq-trigger" aria-expanded="true">
+              <button type="button" class="faq-trigger" aria-expanded="true" aria-controls="faq-panel-1">
                 Do I need a website or online store?
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div class="faq-panel">
-                No. DokaanDM layers onto the Facebook and Instagram presence you already use. There is no storefront to host or maintain.
+              <div class="faq-panel" id="faq-panel-1">
+                <div>
+                  <p>
+                    No. DokaanDM layers onto the Facebook and Instagram presence you already use. There is no
+                    storefront to host or maintain.
+                  </p>
+                </div>
               </div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-trigger" aria-expanded="false">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-panel-2">
                 How does COD risk work?
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div class="faq-panel">
-                We score each customer from your own delivered and returned orders — transparent rules, not machine learning. Labels show with the numbers behind them.
+              <div class="faq-panel" id="faq-panel-2">
+                <div>
+                  <p>
+                    We score each customer from your own delivered and returned orders — transparent rules, not
+                    machine learning. Labels show with the numbers behind them.
+                  </p>
+                </div>
               </div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-trigger" aria-expanded="false">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-panel-3">
                 Is Facebook and Instagram really unified?
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div class="faq-panel">
-                Yes on paid plans. Threads normalize to one schema so you reply from a single inbox. Free includes one channel (FB or IG) to try the workflow.
+              <div class="faq-panel" id="faq-panel-3">
+                <div>
+                  <p>
+                    Yes on paid plans. Threads normalize to one schema so you reply from a single inbox. Free
+                    includes one channel (FB or IG) to try the workflow.
+                  </p>
+                </div>
               </div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-trigger" aria-expanded="false">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-panel-4">
                 Are there payment or transaction fees?
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div class="faq-panel">
-                No. DokaanDM is a clean subscription. Payment type and reference are logged on orders; we do not process payments or take a cut.
+              <div class="faq-panel" id="faq-panel-4">
+                <div>
+                  <p>
+                    No. DokaanDM is a clean subscription. Payment type and reference are logged on orders; we do
+                    not process payments or take a cut.
+                  </p>
+                </div>
               </div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-trigger" aria-expanded="false">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-panel-5">
                 Can I start free?
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div class="faq-panel">
-                Yes. Free includes one channel, 40 orders/month, and 25 products/customers. Upgrade when you need FB+IG together, COD risk, CRM, and the dashboard.
+              <div class="faq-panel" id="faq-panel-5">
+                <div>
+                  <p>
+                    Yes. Free includes one channel, 40 orders/month, and 25 products/customers. Upgrade when you
+                    need FB+IG together, COD risk, CRM, and the dashboard.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+          <p class="faq-footnote reveal">
+            Still deciding? <a href="mailto:support@dokaandm.app">Email support@dokaandm.app</a> and ask anything.
+          </p>
         </div>
       </section>
 
@@ -856,6 +944,7 @@
             </a>
             <a href="../client/" class="btn btn-outline-white btn-lg">Sign in</a>
           </div>
+          <p class="final-cta-note">Free plan · no card required · no transaction fees, ever</p>
         </div>
       </section>
     </main>

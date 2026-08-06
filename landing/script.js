@@ -7,6 +7,17 @@
 
   var THEME_KEY = 'dokaandm-landing-theme';
 
+  /**
+   * `el.hidden = true` only reflects to an attribute on HTMLElement — on an
+   * <svg> it sets a dead expando, so the CSS [hidden] rule never matches.
+   * Always toggle the attribute directly for icon swaps.
+   */
+  function setHidden(el, hidden) {
+    if (!el) return;
+    if (hidden) el.setAttribute('hidden', '');
+    else el.removeAttribute('hidden');
+  }
+
   function getStoredTheme() {
     try {
       return localStorage.getItem(THEME_KEY) || 'system';
@@ -26,12 +37,8 @@
     var isDark = resolved === 'dark';
     document.documentElement.classList.toggle('dark', isDark);
 
-    var sun = document.querySelector('.icon-sun');
-    var moon = document.querySelector('.icon-moon');
-    if (sun && moon) {
-      sun.hidden = !isDark;
-      moon.hidden = isDark;
-    }
+    setHidden(document.querySelector('.icon-sun'), !isDark);
+    setHidden(document.querySelector('.icon-moon'), isDark);
 
     var toggle = document.getElementById('theme-toggle');
     if (toggle) {
@@ -104,8 +111,9 @@
       panel.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      if (menuIcon) menuIcon.hidden = open;
-      if (closeIcon) closeIcon.hidden = !open;
+      setHidden(menuIcon, open);
+      setHidden(closeIcon, !open);
+      document.body.style.overflow = open ? 'hidden' : '';
     }
 
     toggle.addEventListener('click', function () {
@@ -118,6 +126,11 @@
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen()) setOpen(false);
+    });
+
+    // A resize past the desktop breakpoint must not leave the scroll lock on.
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 900 && isOpen()) setOpen(false);
     });
   }
 
@@ -222,6 +235,7 @@
     var imgEl = document.getElementById('lightbox-img');
     var titleEl = document.getElementById('lightbox-title');
     if (!lightbox || !imgEl) return;
+    var lastFocused = null;
 
     var shotTitles = {
       dashboard: 'Dashboard Workspace — Revenue, Orders & COD Queue',
@@ -234,22 +248,35 @@
     function openLightbox(shotKey) {
       var isDark = document.documentElement.classList.contains('dark');
       var title = shotTitles[shotKey] || 'DokaanDM Preview';
+      lastFocused = document.activeElement;
       imgEl.src = './screenshots/' + shotKey + '-' + (isDark ? 'dark' : 'light') + '.png';
       if (titleEl) titleEl.textContent = title;
       lightbox.setAttribute('data-active-shot', shotKey);
       lightbox.classList.add('is-open');
       lightbox.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
     }
 
     function closeLightbox() {
       lightbox.classList.remove('is-open');
       lightbox.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
     }
 
     document.querySelectorAll('.shot-clickable').forEach(function (el) {
+      // Screenshots are zoomable, so they need to behave like controls.
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('aria-label', 'Open full-size screenshot');
       el.addEventListener('click', function () {
+        var key = el.getAttribute('data-shot');
+        if (key) openLightbox(key);
+      });
+      el.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
         var key = el.getAttribute('data-shot');
         if (key) openLightbox(key);
       });
@@ -560,13 +587,28 @@
     var preventedOrdersEl = document.getElementById('calc-prevented-orders');
     var shippingCostEl = document.getElementById('calc-shipping-cost');
 
+    var gmvEl = document.getElementById('calc-gmv');
+    var returnsEl = document.getElementById('calc-returns');
+    var flaggedEl = document.getElementById('calc-flagged');
+
     if (!ordersInput || !aovInput || !returnRateInput) return;
 
     function formatNpr(amount) {
       return 'NPR ' + Math.round(amount).toLocaleString('en-US');
     }
 
+    // Paints the filled portion of the track (see .calc-slider --pct in styles.css)
+    function paintTrack(input) {
+      var min = parseFloat(input.min) || 0;
+      var max = parseFloat(input.max) || 100;
+      var val = parseFloat(input.value);
+      var pct = max === min ? 0 : ((val - min) / (max - min)) * 100;
+      input.style.setProperty('--pct', pct.toFixed(2) + '%');
+    }
+
     function calculate() {
+      [ordersInput, aovInput, returnRateInput].forEach(paintTrack);
+
       var orders = parseInt(ordersInput.value, 10) || 150;
       var aov = parseInt(aovInput.value, 10) || 1800;
       var returnRate = parseInt(returnRateInput.value, 10) || 12;
@@ -585,6 +627,12 @@
       if (totalSavingsEl) totalSavingsEl.textContent = formatNpr(totalRevenueProtected);
       if (preventedOrdersEl) preventedOrdersEl.textContent = String(preventedReturns);
       if (shippingCostEl) shippingCostEl.textContent = Math.round(wastedShippingSaved).toLocaleString('en-US');
+
+      if (gmvEl) gmvEl.textContent = formatNpr(orders * aov);
+      if (returnsEl) returnsEl.textContent = totalReturns + (totalReturns === 1 ? ' order' : ' orders');
+      if (flaggedEl) {
+        flaggedEl.textContent = preventedReturns + (preventedReturns === 1 ? ' order' : ' orders');
+      }
     }
 
     ordersInput.addEventListener('input', calculate);
@@ -599,24 +647,35 @@
     var navLinks = document.querySelectorAll('.nav-desktop a[href^="#"]');
     if (!sections.length || !navLinks.length) return;
 
-    function onScroll() {
-      var headerH = 80;
-      var scrollPos = window.scrollY + headerH;
+    var ticking = false;
+
+    function update() {
+      var scrollPos = window.scrollY + 96;
+      var current = null;
 
       sections.forEach(function (sec) {
-        var top = sec.offsetTop;
-        var height = sec.offsetHeight;
-        var id = sec.getAttribute('id');
-
-        if (scrollPos >= top && scrollPos < top + height) {
-          navLinks.forEach(function (link) {
-            link.classList.toggle('is-active', link.getAttribute('href') === '#' + id);
-          });
+        var top = sec.getBoundingClientRect().top + window.scrollY;
+        if (scrollPos >= top && scrollPos < top + sec.offsetHeight) {
+          current = sec.getAttribute('id');
         }
+      });
+
+      navLinks.forEach(function (link) {
+        link.classList.toggle('is-active', !!current && link.getAttribute('href') === '#' + current);
+      });
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        update();
       });
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    update();
   }
 
   /* Back to Top Floating Button */
