@@ -260,7 +260,7 @@ ul {
   width: 2.125rem;
   height: 2.125rem;
   border-radius: 0.625rem;
-  background: linear-gradient(145deg, rgb(var(--brand)), rgb(var(--accent)));
+  background: rgb(var(--brand));
   color: rgb(var(--brand-fg));
   box-shadow:
     0 1px 2px rgb(16 24 40 / 0.12),
@@ -609,48 +609,74 @@ html.dark .section-surface {
   background: rgb(var(--bg-2));
 }
 
+/* Editorial split: label and heading hold the left column, the standfirst sits
+   in the right and baselines with the heading. Centred heads on every section
+   flatten the page into a stack of identical blocks. */
+/* No rule of its own: every section below opens with its own hairline, and two
+   rules 50px apart read as a mistake rather than a system. */
 .section-head {
-  max-width: 44rem;
-  margin-inline: auto;
-  text-align: center;
+  max-width: 42rem;
+  padding-bottom: clamp(2rem, 3.5vw, 2.75rem);
 }
 
+@media (min-width: 900px) {
+  .section-head:not(.section-head--stack) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: clamp(2.5rem, 6vw, 5.5rem);
+    align-items: end;
+    max-width: none;
+  }
+
+  .section-head .eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .section-head .section-title {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .section-head .section-lead {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+    padding-bottom: 0.35rem;
+  }
+}
+
+/* Heads with no standfirst stay a single left column — splitting them would
+   leave an empty half and wrap the title for no reason. */
+.section-head--stack {
+  max-width: 40rem;
+}
+
+/* A plain typographic label. Neutral, not brand blue: when every eyebrow, icon
+   and tick on the page is blue, the accent stops meaning anything. */
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--r-full);
-  border: 1px solid rgb(var(--brand) / 0.24);
-  background: rgb(var(--brand) / 0.08);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--brand));
-}
-
-.eyebrow::before {
-  content: '';
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: var(--r-full);
-  background: currentColor;
+  color: rgb(var(--text-3));
 }
 
 .section-title {
-  margin-top: 1rem;
+  margin-top: 0.85rem;
   font-size: var(--fs-h2);
   font-weight: 800;
   letter-spacing: -0.035em;
   color: rgb(var(--text));
+  text-wrap: balance;
 }
 
 .section-lead {
   margin-top: 0.9rem;
   font-size: var(--fs-lg);
-  line-height: 1.65;
+  line-height: 1.6;
   color: rgb(var(--text-2));
+  max-width: 34rem;
 }
 
 /* ==========================================================================
@@ -665,42 +691,40 @@ html.dark .section-surface {
   padding-bottom: clamp(3rem, 6vw, 5rem);
 }
 
+/* Quiet background: a faint grid that fades out, and one restrained wash.
+   Anything louder competes with the screenshot for attention. */
 .hero-grid {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.55;
+  opacity: 0.3;
   background-image:
     linear-gradient(to right, rgb(var(--border)) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(var(--border)) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 62% at 50% 0%, #000 5%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 0%, #000 5%, transparent 70%);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 5%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 5%, transparent 72%);
 }
 
 html.dark .hero-grid {
-  opacity: 0.5;
+  opacity: 0.32;
 }
 
 .hero-glow {
   pointer-events: none;
   position: absolute;
-  top: -10rem;
+  top: -14rem;
   left: 50%;
-  width: min(120%, 62rem);
-  height: 34rem;
+  width: min(120%, 58rem);
+  height: 30rem;
   transform: translateX(-50%);
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, rgb(var(--brand) / 0.16), transparent 62%),
-    radial-gradient(circle at 30% 60%, rgb(var(--accent) / 0.1), transparent 60%);
-  filter: blur(30px);
+  background: radial-gradient(circle at 50% 50%, rgb(var(--brand) / 0.1), transparent 62%);
+  filter: blur(36px);
 }
 
 html.dark .hero-glow {
-  background:
-    radial-gradient(circle at 50% 50%, rgb(var(--brand) / 0.22), transparent 62%),
-    radial-gradient(circle at 30% 60%, rgb(var(--accent) / 0.14), transparent 60%);
+  background: radial-gradient(circle at 50% 50%, rgb(var(--brand) / 0.16), transparent 62%);
 }
 
 .hero-content {
@@ -710,48 +734,14 @@ html.dark .hero-glow {
   text-align: center;
 }
 
+/* Plain editorial eyebrow — a pill badge here would only restate the category.
+   Sentence case on purpose: uppercasing would render "DMs" as "DMS". */
 .hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.35rem;
-  padding: 0.35rem 0.85rem 0.35rem 0.5rem;
-  border-radius: var(--r-full);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface) / 0.8);
-  box-shadow: var(--shadow-xs);
-  font-size: var(--fs-xs);
+  margin-bottom: 1rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
-  letter-spacing: 0.01em;
-  color: rgb(var(--text-2));
-  backdrop-filter: blur(6px);
-}
-
-.hero-eyebrow .pip {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--brand) / 0.14);
-  flex-shrink: 0;
-}
-
-.hero-eyebrow .pip::after {
-  content: '';
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--brand));
-  box-shadow: 0 0 0 0 rgb(var(--brand) / 0.55);
-  animation: pipPulse 2.4s ease-out infinite;
-}
-
-@keyframes pipPulse {
-  0% { box-shadow: 0 0 0 0 rgb(var(--brand) / 0.5); }
-  70% { box-shadow: 0 0 0 0.5rem rgb(var(--brand) / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(var(--brand) / 0); }
+  letter-spacing: 0.02em;
+  color: rgb(var(--text-3));
 }
 
 .hero h1 {
@@ -763,10 +753,13 @@ html.dark .hero-glow {
 }
 
 .hero h1 .accent {
-  background: linear-gradient(100deg, rgb(var(--brand)), rgb(var(--accent)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: rgb(var(--brand));
+}
+
+@keyframes pipPulse {
+  0% { box-shadow: 0 0 0 0 rgb(var(--success) / 0.5); }
+  70% { box-shadow: 0 0 0 0.5rem rgb(var(--success) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--success) / 0); }
 }
 
 .hero-lead {
@@ -802,10 +795,9 @@ html.dark .hero-glow {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem 1.15rem;
-  margin-top: 1.6rem;
+  gap: 0.4rem 1.35rem;
+  margin-top: 1.5rem;
   font-size: var(--fs-sm);
-  font-weight: 500;
   color: rgb(var(--text-2));
 }
 
@@ -816,77 +808,15 @@ html.dark .hero-glow {
 }
 
 .hero-trust svg {
-  width: 0.9rem;
-  height: 0.9rem;
-  color: rgb(var(--success));
-}
-
-.hero-trust .dot {
-  display: none;
-  width: 0.25rem;
-  height: 0.25rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--border-strong));
-}
-
-@media (min-width: 720px) {
-  .hero-trust .dot {
-    display: inline-block;
-  }
+  width: 0.8rem;
+  height: 0.8rem;
+  color: rgb(var(--text-3));
 }
 
 .hero-shot {
   position: relative;
   margin: clamp(2.5rem, 5vw, 4rem) auto 0;
   max-width: 68rem;
-}
-
-/* Stats — hairline-divided bar */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin: clamp(2.5rem, 4.5vw, 3.5rem) auto 0;
-  max-width: 62rem;
-  border: 1px solid rgb(var(--border));
-  border-radius: var(--r-lg);
-  background: rgb(var(--border));
-  overflow: hidden;
-  box-shadow: var(--shadow-xs);
-}
-
-.stats > div {
-  background: rgb(var(--surface));
-  padding: 1.15rem 1.15rem 1.2rem;
-  transition: background 0.2s var(--ease);
-}
-
-.stats > div:hover {
-  background: rgb(var(--surface-2));
-}
-
-@media (min-width: 720px) {
-  .stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .stats > div {
-    padding: 1.35rem 1.4rem;
-  }
-}
-
-.stat-value {
-  font-family: var(--font-heading);
-  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.4rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: rgb(var(--text));
-}
-
-.stat-label {
-  margin-top: 0.3rem;
-  font-size: var(--fs-sm);
-  line-height: 1.45;
-  color: rgb(var(--text-3));
 }
 
 /* ==========================================================================
@@ -907,7 +837,7 @@ html.dark .hero-glow {
   position: absolute;
   inset: 8% 6% -2%;
   border-radius: var(--r-2xl);
-  background: linear-gradient(180deg, rgb(var(--brand) / 0.16), rgb(var(--accent) / 0.08));
+  background: rgb(var(--brand) / 0.12);
   filter: blur(38px);
   z-index: 0;
   pointer-events: none;
@@ -935,7 +865,6 @@ html.dark .hero-glow {
 .shot-clickable:hover .shot-frame {
   border-color: rgb(var(--border-strong));
   box-shadow: var(--shadow-xl);
-  transform: translateY(-3px);
 }
 
 .shot-chrome {
@@ -947,22 +876,32 @@ html.dark .hero-glow {
   background: rgb(var(--surface-2));
 }
 
+/* Mock browser chrome earns its place once, in the hero. Repeating it on five
+   more screenshots turns a device into wallpaper. */
+.product-block .shot-dots,
+.product-block .shot-url {
+  display: none;
+}
+
+.product-block .shot-chrome {
+  justify-content: flex-end;
+  padding: 0.45rem 0.5rem;
+}
+
 .shot-dots {
   display: flex;
   gap: 0.375rem;
   flex-shrink: 0;
 }
 
+/* Neutral, not macOS traffic lights — this is a web app, and coloured dots
+   read as decoration rather than chrome. */
 .shot-dots span {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: var(--r-full);
   background: rgb(var(--border-strong));
 }
-
-.shot-dots span:nth-child(1) { background: #f87171; }
-.shot-dots span:nth-child(2) { background: #fbbf24; }
-.shot-dots span:nth-child(3) { background: #34d399; }
 
 .shot-url {
   flex: 1;
@@ -988,11 +927,7 @@ html.dark .hero-glow {
 }
 
 .shot-url .live {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--success));
-  flex-shrink: 0;
+  display: none;
 }
 
 .shot-zoom-hint {
@@ -1066,122 +1001,85 @@ html.dark .hero-glow {
    Features
    ========================================================================== */
 
+/* Ruled columns rather than six identical boxes. The hairline grid gives the
+   same scanning structure without wrapping every idea in a card. */
 .feature-grid {
   display: grid;
-  gap: 1rem;
-  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+  gap: 0;
+  border-top: 1px solid rgb(var(--border));
 }
 
 @media (min-width: 640px) {
   .feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.75rem, 4vw, 3.5rem);
   }
 }
 
 @media (min-width: 1024px) {
   .feature-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.15rem;
   }
 }
 
 .feature-card {
-  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  border-radius: var(--r-lg);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface));
-  overflow: hidden;
-  transition:
-    border-color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease),
-    transform 0.25s var(--ease);
+  padding-block: clamp(1.6rem, 3vw, 2.25rem);
+  border-bottom: 1px solid rgb(var(--border));
 }
 
-.feature-card::before {
-  content: '';
-  position: absolute;
-  inset: -40% 40% 60% -40%;
-  background: radial-gradient(circle, rgb(var(--brand) / 0.16), transparent 68%);
-  opacity: 0;
-  transition: opacity 0.35s var(--ease);
-  pointer-events: none;
-}
-
-.feature-card:hover {
-  border-color: rgb(var(--brand) / 0.35);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.feature-card:hover::before {
-  opacity: 1;
+/* Last row keeps its rule only where the grid actually ends. */
+@media (min-width: 1024px) {
+  .feature-card:nth-last-child(-n + 3) {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
 }
 
 .feature-icon {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-bottom: 1.05rem;
-  border-radius: 0.7rem;
-  border: 1px solid rgb(var(--brand) / 0.18);
-  background: linear-gradient(160deg, rgb(var(--brand) / 0.16), rgb(var(--brand) / 0.06));
-  color: rgb(var(--brand));
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-bottom: 0.9rem;
+  color: rgb(var(--text-2));
 }
 
 .feature-icon svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 100%;
+  height: 100%;
 }
 
 .feature-card h3 {
-  position: relative;
   font-size: var(--fs-h4);
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: rgb(var(--text));
 }
 
 .feature-card p {
-  position: relative;
   margin-top: 0.5rem;
+  margin-bottom: 1.1rem;
   font-size: var(--fs-base);
-  line-height: 1.6;
+  line-height: 1.65;
   color: rgb(var(--text-2));
+  max-width: 26rem;
 }
 
+/* margin-top:auto keeps the spec line on the baseline across a row. */
 .feature-tag {
-  position: relative;
   align-self: flex-start;
-  margin-top: 1.15rem;
-  padding: 0.22rem 0.6rem;
-  border-radius: var(--r-xs);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface-2));
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  margin-top: auto;
+  font-size: var(--fs-xs);
+  font-weight: 500;
   color: rgb(var(--text-3));
-  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+  font-variant-numeric: tabular-nums;
 }
 
-.feature-card:hover .feature-tag {
-  color: rgb(var(--brand));
-  border-color: rgb(var(--brand) / 0.3);
-}
 
 /* ==========================================================================
    Product tour (sticky scroll showcase)
    ========================================================================== */
-
-/* The pin centres its panel in the viewport, so pull it up under the section head
-   to keep the transition into the pinned state tight. */
-.product-head + .product-pin {
-  margin-top: calc(var(--section-y) * -0.6);
-}
 
 .product-pin {
   --product-steps: 5;
@@ -1189,26 +1087,46 @@ html.dark .hero-glow {
   --product-progress: 0;
   --product-segment: 0;
   position: relative;
-  height: calc(var(--product-steps) * var(--product-step-vh) * 1vh);
-}
-
-@media (max-width: 1023px) {
-  .product-pin {
-    --product-step-vh: 62;
-  }
 }
 
 .product-pin-sticky {
-  position: sticky;
-  top: 4rem;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  /* Full viewport height so the panel sits dead-centre for the whole pinned scroll */
-  min-height: calc(100vh - 4rem);
-  padding-block: 1rem 2rem;
   background: rgb(var(--bg-2));
-  overflow: hidden;
+}
+
+/* Scroll-pinned showcase only above the two-column breakpoint.
+   Below it the panel stacks taller than the viewport, and a pinned box would
+   clip the screenshot with no way to scroll it into view — so the tour falls
+   back to a plain click-driven tab panel that flows with the page. */
+@media (min-width: 1024px) {
+  .product-pin {
+    height: calc(var(--product-steps) * var(--product-step-vh) * 1vh);
+  }
+
+  .product-pin-sticky {
+    position: sticky;
+    top: 4rem;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    /* Full viewport height so the panel sits dead-centre for the whole pinned scroll */
+    min-height: calc(100vh - 4rem);
+    padding-block: 1rem 2rem;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 1023px) {
+  .product-pin-sticky {
+    padding-top: clamp(1.75rem, 4vw, 2.5rem);
+    padding-bottom: 0.5rem;
+  }
+
+  /* No scroll-linked segment in tab mode — neutralise the parallax offsets. */
+  .product-block.is-active .product-copy,
+  .product-block.is-active .shot-stage {
+    transform: none;
+    transition: none;
+  }
 }
 
 .product-pin-sticky .container {
@@ -1318,7 +1236,7 @@ html.dark .hero-glow {
   height: 100%;
   width: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, rgb(var(--brand)), rgb(var(--accent)));
+  background: rgb(var(--brand));
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -1478,13 +1396,6 @@ html.dark .hero-glow {
   overflow: hidden;
 }
 
-.dm-simulator-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: -60% 20% 70% -10%;
-  background: radial-gradient(circle, rgb(var(--brand) / 0.1), transparent 65%);
-  pointer-events: none;
-}
 
 .sim-header {
   position: relative;
@@ -1494,29 +1405,7 @@ html.dark .hero-glow {
   margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
-.sim-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--brand) / 0.08);
-  border: 1px solid rgb(var(--brand) / 0.22);
-  color: rgb(var(--brand));
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  margin-bottom: 0.85rem;
-}
 
-.sim-badge::before {
-  content: '';
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: var(--r-full);
-  background: currentColor;
-}
 
 .sim-header h3 {
   font-size: var(--fs-h3);
@@ -1598,9 +1487,13 @@ html.dark .hero-glow {
 .sim-status {
   display: inline-flex;
   align-items: center;
-  font-size: var(--fs-xs);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--r-xs);
+  border: 1px solid rgb(var(--border));
+  background: rgb(var(--surface));
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: rgb(var(--success));
+  color: rgb(var(--text-3));
   flex-shrink: 0;
 }
 
@@ -1788,8 +1681,7 @@ html.dark .hero-glow {
 
 .sim-ready-text {
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: rgb(var(--success));
+  color: rgb(var(--text-3));
 }
 
 /* ==========================================================================
@@ -1799,93 +1691,52 @@ html.dark .hero-glow {
 .steps {
   position: relative;
   display: grid;
-  gap: 1rem;
-  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+  gap: 2rem;
+  margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
 }
 
 @media (min-width: 768px) {
   .steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.15rem;
+    column-gap: clamp(1.75rem, 4vw, 3.5rem);
   }
 }
 
+/* A numbered sequence, not three more cards. The rule above each step carries
+   the structure; the numeral carries the order. */
 .step {
   position: relative;
-  padding: 1.6rem 1.5rem;
-  border-radius: var(--r-lg);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface));
-  transition:
-    border-color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease),
-    transform 0.25s var(--ease);
-}
-
-.step:hover {
-  border-color: rgb(var(--brand) / 0.35);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-/* Connector between step cards */
-@media (min-width: 768px) {
-  .step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 2.85rem;
-    right: -1.15rem;
-    width: 1.15rem;
-    height: 1px;
-    background: linear-gradient(90deg, rgb(var(--border-strong)), rgb(var(--border) / 0));
-  }
+  padding-top: 1.35rem;
+  border-top: 2px solid rgb(var(--text));
 }
 
 .step-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.step-icon {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.7rem;
-  border: 1px solid rgb(var(--brand) / 0.18);
-  background: linear-gradient(160deg, rgb(var(--brand) / 0.16), rgb(var(--brand) / 0.06));
-  color: rgb(var(--brand));
-  flex-shrink: 0;
-}
-
-.step-icon svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  margin-bottom: 0.9rem;
 }
 
 .step-num {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-size: var(--fs-xs);
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.04em;
-  color: rgb(var(--border-strong));
+  letter-spacing: 0.14em;
+  color: rgb(var(--text-3));
+  font-variant-numeric: tabular-nums;
 }
 
 .step h3 {
-  font-size: var(--fs-h4);
+  font-size: var(--fs-h3);
   font-weight: 700;
+  letter-spacing: -0.03em;
   color: rgb(var(--text));
 }
 
 .step p {
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   font-size: var(--fs-base);
-  line-height: 1.6;
+  line-height: 1.65;
   color: rgb(var(--text-2));
+  max-width: 24rem;
 }
 
 /* ==========================================================================
@@ -2070,7 +1921,7 @@ html.dark .hero-glow {
   overflow: hidden;
   border-radius: var(--r-lg);
   border: 1px solid rgb(var(--brand) / 0.35);
-  background: linear-gradient(165deg, rgb(var(--brand)), rgb(var(--accent)));
+  background: rgb(var(--brand));
   padding: clamp(1.5rem, 3vw, 2rem);
   text-align: center;
   box-shadow: 0 18px 40px -18px rgb(var(--brand) / 0.6);
@@ -2120,7 +1971,6 @@ html.dark .hero-glow {
   margin-block: 0.6rem;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 12px rgb(0 0 0 / 0.18);
 }
 
 .result-desc {
@@ -2151,8 +2001,8 @@ html.dark .hero-glow {
 
 .billing-toggle {
   display: flex;
-  justify-content: center;
-  margin-top: 1.9rem;
+  justify-content: flex-start;
+  margin-top: 0.25rem;
 }
 
 .toggle {
@@ -2237,7 +2087,6 @@ html.dark .hero-glow {
 .price-card:hover {
   border-color: rgb(var(--border-strong));
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .price-card.is-popular {
@@ -2246,7 +2095,7 @@ html.dark .hero-glow {
     0 0 0 1px rgb(var(--brand) / 0.2),
     var(--shadow-lg);
   background:
-    linear-gradient(180deg, rgb(var(--brand) / 0.06), rgb(var(--surface) / 0) 42%),
+    linear-gradient(180deg, rgb(var(--brand) / 0.05), rgb(var(--surface) / 0) 40%),
     rgb(var(--surface));
 }
 
@@ -2271,7 +2120,7 @@ html.dark .hero-glow {
   gap: 0.3rem;
   padding: 0.25rem 0.7rem;
   border-radius: var(--r-full);
-  background: linear-gradient(120deg, rgb(var(--brand)), rgb(var(--accent)));
+  background: rgb(var(--brand));
   color: #fff;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -2342,173 +2191,80 @@ html.dark .hero-glow {
 
 .pricing-note {
   margin-top: 1.9rem;
-  text-align: center;
+  max-width: 44rem;
   font-size: var(--fs-sm);
   color: rgb(var(--text-3));
 }
 
 /* ==========================================================================
-   Social proof
+   Scope — what the product deliberately does not do
    ========================================================================== */
 
-.proof-grid {
+.scope-list {
   display: grid;
-  gap: 1.15rem;
+  gap: 0;
   margin-top: clamp(2.25rem, 4vw, 3.25rem);
+  border-top: 1px solid rgb(var(--border));
 }
 
-@media (min-width: 1024px) {
-  .proof-grid {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    align-items: stretch;
+@media (min-width: 768px) {
+  .scope-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 4vw, 4rem);
   }
 }
 
-.quote-card {
+.scope-list li {
+  padding-block: 1.6rem;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.scope-list h3 {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  border-radius: var(--r-lg);
-  border: 1px solid rgb(var(--border));
-  background:
-    linear-gradient(180deg, rgb(var(--brand) / 0.05), rgb(var(--surface) / 0) 45%),
-    rgb(var(--surface));
-  overflow: hidden;
-}
-
-.quote-card > svg {
-  width: 1.75rem;
-  height: 1.75rem;
-  color: rgb(var(--brand) / 0.35);
-}
-
-.quote-card blockquote {
-  margin-top: 1.1rem;
-  font-family: var(--font-heading);
-  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.55rem);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.45;
-  color: rgb(var(--text));
-  text-wrap: pretty;
-}
-
-.quote-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: 1.75rem;
-}
-
-.quote-metric {
-  padding: 0.75rem 0.85rem;
-  border-radius: var(--r-sm);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--bg));
-}
-
-.quote-metric strong {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: rgb(var(--brand));
-}
-
-.quote-metric span {
-  display: block;
-  margin-top: 0.15rem;
-  font-size: var(--fs-xs);
-  line-height: 1.35;
-  color: rgb(var(--text-3));
-}
-
-.quote-author {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: auto;
-  padding-top: 1.6rem;
-}
-
-.quote-avatar {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--r-full);
-  background: linear-gradient(140deg, rgb(var(--brand) / 0.18), rgb(var(--accent) / 0.18));
-  color: rgb(var(--brand));
-  font-size: var(--fs-sm);
-  font-weight: 800;
-  border: 1px solid rgb(var(--brand) / 0.2);
-  flex-shrink: 0;
-}
-
-.quote-author strong {
-  display: block;
-  font-size: var(--fs-base);
-  color: rgb(var(--text));
-}
-
-.quote-author span {
-  font-size: var(--fs-xs);
-  color: rgb(var(--text-3));
-}
-
-.proof-cards {
-  display: grid;
-  gap: 1.15rem;
-}
-
-@media (min-width: 640px) and (max-width: 1023px) {
-  .proof-cards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.proof-card {
-  display: flex;
-  flex-direction: column;
-  padding: 1.35rem;
-  border-radius: var(--r-lg);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface));
-  transition:
-    border-color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease);
-}
-
-.proof-card:hover {
-  border-color: rgb(var(--brand) / 0.3);
-  box-shadow: var(--shadow-sm);
-}
-
-.proof-card > svg {
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0.55rem;
-  border-radius: 0.6rem;
-  border: 1px solid rgb(var(--brand) / 0.18);
-  background: rgb(var(--brand) / 0.09);
-  color: rgb(var(--brand));
-}
-
-.proof-card h3 {
-  margin-top: 0.85rem;
+  padding-left: 1.6rem;
   font-size: var(--fs-h4);
   font-weight: 700;
   color: rgb(var(--text));
 }
 
-.proof-card p {
-  margin-top: 0.4rem;
-  font-size: var(--fs-base);
-  line-height: 1.6;
-  color: rgb(var(--text-2));
+/* A struck-through rule, not a red cross: these are choices, not failures. */
+.scope-list h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.85rem;
+  height: 2px;
+  border-radius: 1px;
+  background: rgb(var(--text-3));
 }
+
+.scope-list p {
+  margin-top: 0.5rem;
+  padding-left: 1.6rem;
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: rgb(var(--text-2));
+  max-width: 34rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ==========================================================================
    FAQ
@@ -2518,24 +2274,11 @@ html.dark .hero-glow {
   margin-top: clamp(2rem, 3.5vw, 2.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  border-top: 1px solid rgb(var(--border));
 }
 
 .faq-item {
-  border-radius: var(--r-md);
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--surface));
-  overflow: hidden;
-  transition: border-color 0.22s var(--ease), box-shadow 0.22s var(--ease);
-}
-
-.faq-item:hover {
-  border-color: rgb(var(--border-strong));
-}
-
-.faq-item.is-open {
-  border-color: rgb(var(--brand) / 0.4);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid rgb(var(--border));
 }
 
 .faq-trigger {
@@ -2544,12 +2287,17 @@ html.dark .hero-glow {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 1.25rem;
+  padding: 1.25rem 0;
   text-align: left;
   font-size: var(--fs-md);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: rgb(var(--text));
+  transition: color 0.18s var(--ease);
+}
+
+.faq-trigger:hover {
+  color: rgb(var(--brand));
 }
 
 .faq-trigger svg {
@@ -2581,7 +2329,8 @@ html.dark .hero-glow {
 }
 
 .faq-panel p {
-  padding: 0 1.25rem 1.25rem;
+  padding: 0 0 1.4rem;
+  max-width: 42rem;
   font-size: var(--fs-base);
   line-height: 1.7;
   color: rgb(var(--text-2));
@@ -2589,7 +2338,6 @@ html.dark .hero-glow {
 
 .faq-footnote {
   margin-top: 1.75rem;
-  text-align: center;
   font-size: var(--fs-base);
   color: rgb(var(--text-2));
 }
@@ -2617,11 +2365,11 @@ html.dark .hero-glow {
 .final-cta-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgb(var(--brand-active)), rgb(var(--brand)) 45%, rgb(var(--accent)));
+  background: linear-gradient(135deg, rgb(var(--brand-active)), rgb(var(--brand)));
 }
 
 html.dark .final-cta-bg {
-  background: linear-gradient(135deg, rgb(23 51 120), rgb(30 78 190) 48%, rgb(72 68 190));
+  background: linear-gradient(135deg, rgb(23 51 120), rgb(32 82 196));
 }
 
 .final-cta-shine {
@@ -2715,36 +2463,8 @@ html.dark .final-cta-bg {
   color: rgb(var(--text-2));
 }
 
-.footer-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.1rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--success) / 0.08);
-  border: 1px solid rgb(var(--success) / 0.25);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: rgb(var(--success));
-}
 
-.status-dot {
-  position: relative;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: var(--r-full);
-  background: currentColor;
-}
 
-.status-dot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: currentColor;
-  animation: pipPulse 2.4s ease-out infinite;
-}
 
 .footer-social {
   display: flex;
@@ -2763,7 +2483,6 @@ html.dark .final-cta-bg {
 }
 
 .social-btn:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 
@@ -2922,11 +2641,7 @@ html.dark .final-cta-bg {
 }
 
 .live-indicator {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: var(--r-full);
-  background: rgb(var(--success));
-  flex-shrink: 0;
+  display: none;
 }
 
 .lightbox-title {
@@ -2998,7 +2713,6 @@ html.dark .final-cta-bg {
   background: rgb(var(--brand));
   border-color: rgb(var(--brand));
   color: #fff;
-  transform: translateY(-2px);
 }
 
 .back-to-top svg {

@@ -14,12 +14,15 @@ export function Logo({ className, showText = true, size = 'md', inverted = false
           inverted && 'bg-white text-brand'
         )}
       >
+        {/* A "D" for dokaan whose counter is a speech bubble: the shop holds the
+            conversation. Keep in sync with public/favicon.svg. */}
         <svg viewBox="0 0 32 32" className="h-2/3 w-2/3" aria-hidden>
           <path
-            d="M9 22V10h5.2c3.7 0 6.3 2.4 6.3 6s-2.6 6-6.3 6H9Zm3.2-2.7h1.8c2 0 3.3-1.3 3.3-3.3s-1.3-3.3-3.3-3.3h-1.8v6.6Z"
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M6.5 4.5H14.5C21.4 4.5 25.5 9.6 25.5 16C25.5 22.4 21.4 27.5 14.5 27.5H6.5V4.5ZM10.9 9V18.7H11.9V22.9L15.6 18.7H18.1C20 18.7 21.3 17.4 21.3 15.6V12.1C21.3 10.3 20 9 18.1 9H10.9Z"
             fill="currentColor"
           />
-          <circle cx="23.5" cy="21.5" r="2.2" fill="currentColor" />
         </svg>
       </div>
       {showText && (

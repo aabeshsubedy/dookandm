@@ -313,6 +313,15 @@
     var reduceMotion =
       window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Mirrors the CSS breakpoint in styles.css: below 1024px the panel stacks
+    // taller than the viewport, so the tour runs as plain click-driven tabs
+    // instead of a scroll-pinned sequence.
+    var pinQuery = window.matchMedia('(min-width: 1024px)');
+
+    function isPinned() {
+      return pinQuery.matches && !reduceMotion;
+    }
+
     function headerHeight() {
       var header = document.getElementById('site-header');
       return header ? header.offsetHeight : 64;
@@ -381,6 +390,7 @@
       pin.style.setProperty('--product-progress', ((index + segment) / n).toFixed(4));
 
       // Tabs: progress fill + single active — never cycles past n
+      var pinned = isPinned();
       tabs.forEach(function (tab, i) {
         if (i >= n) {
           tab.hidden = true;
@@ -388,7 +398,10 @@
         }
         var fill = tab.querySelector('.quick-tab-fill');
         var scale = 0;
-        if (i < index) scale = 1;
+        if (!pinned) {
+          // Tab mode: the bar marks the selected tab, not scroll progress.
+          scale = i === index ? 1 : 0;
+        } else if (i < index) scale = 1;
         else if (i === index) scale = Math.max(0.06, segment);
         else scale = 0;
 
@@ -425,7 +438,7 @@
     }
 
     function onScroll() {
-      if (ticking) return;
+      if (!isPinned() || ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
         ticking = false;
@@ -452,12 +465,13 @@
         if (isNaN(index)) index = i;
         index = clamp(index, 0, n - 1);
 
-        setActive(index, 0.08);
-
-        if (reduceMotion) {
-          pin.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!isPinned()) {
+          // Tab mode: swap the panel in place, no scroll hijacking.
+          setActive(index, 1);
           return;
         }
+
+        setActive(index, 0.08);
 
         lockFromClick = true;
         if (lockTimer) clearTimeout(lockTimer);
@@ -484,6 +498,22 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
+
+    // Crossing the breakpoint swaps pinned <-> tab mode; re-sync so the fills
+    // and the active panel match the mode we just entered.
+    function onModeChange() {
+      lockFromClick = false;
+      if (lockTimer) clearTimeout(lockTimer);
+      if (isPinned()) {
+        var metrics = scrollMetrics();
+        setActive(metrics.index, metrics.segment);
+      } else {
+        setActive(activeIndex < 0 ? 0 : activeIndex, 1);
+      }
+    }
+
+    if (pinQuery.addEventListener) pinQuery.addEventListener('change', onModeChange);
+    else if (pinQuery.addListener) pinQuery.addListener(onModeChange);
 
     // Initial state: first panel only
     panels.forEach(function (panel, i) {
@@ -517,7 +547,7 @@
         addr: 'New Baneshwor, Kathmandu',
         item: 'Black Oversized Hoodie (Size M)',
         total: 'NPR 2,490',
-        codText: 'LOW COD RISK (0% Return)',
+        codText: 'Low COD risk · 0 returns on record',
         codClass: 'badge-success'
       },
       {
@@ -526,7 +556,7 @@
         addr: 'Lalitpur, Ward 4',
         item: 'Vintage Denim Jacket (Size L)',
         total: 'NPR 3,850',
-        codText: 'MODERATE COD RISK (1 Return Logged)',
+        codText: 'Medium COD risk · 1 return on record',
         codClass: 'badge-pending'
       }
     ];
@@ -538,7 +568,7 @@
 
       btn.disabled = true;
       btn.style.opacity = '0.7';
-      btn.innerHTML = '<svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Capturing Order...';
+      btn.innerHTML = '<svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Capturing…';
 
       card.style.transform = 'scale(0.98)';
       card.style.opacity = '0.5';
@@ -563,10 +593,10 @@
 
         btn.disabled = false;
         btn.style.opacity = '1';
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg> Order Captured Successfully!';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg> Order captured';
 
         setTimeout(function () {
-          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg> Simulate Next DM Order';
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M6 2h12l3 7H3l3-7z"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M10 14h4"/></svg> Try the next message';
           isCapturing = false;
         }, 1800);
       }, 500);
